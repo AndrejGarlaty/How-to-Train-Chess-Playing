@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
     private int selectedRow = -1;
     private int selectedCol = -1;
-    private boolean isWhiteTurn = true;
 
     private void handleSquareClick(int row, int col) {
         if (selectedRow == -1 && selectedCol == -1) {
