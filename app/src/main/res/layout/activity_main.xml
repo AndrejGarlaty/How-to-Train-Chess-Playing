@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- Chessboard GridView -->
     <GridView
         android:id="@+id/chessboard"
         android:layout_width="wrap_content"
@@ -17,4 +16,45 @@
         android:horizontalSpacing="0dp"
         android:verticalSpacing="0dp"
         android:padding="0dp"/>
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#3F51B5"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/turnIndicator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:text="@string/white_s_turn"/>
+
+        <TextView
+            android:id="@+id/checkStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="#FF0000"
+            android:textAlignment="center"
+            android:text="@string/gameState"/>
+
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/resetBtn"
+            android:paddingHorizontal="12dp"
+            android:backgroundTint="#9C27B0"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

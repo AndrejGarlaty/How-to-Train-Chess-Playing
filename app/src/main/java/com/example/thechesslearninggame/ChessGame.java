@@ -319,4 +319,16 @@ public class ChessGame {
         whiteIsInCheck = isSquareUnderAttack(whiteKingRow, whiteKingCol, board, false);
         blackIsInCheck = isSquareUnderAttack(blackKingRow, blackKingCol, board, true);
     }
+
+    public boolean isWhiteIsInCheck() {
+        return whiteIsInCheck;
+    }
+
+    public boolean isBlackIsInCheck() {
+        return blackIsInCheck;
+    }
+
+    public boolean isWhiteTurn() {
+        return isWhiteTurn;
+    }
 }

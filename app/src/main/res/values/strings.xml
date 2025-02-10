@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">The Chess Learning Game</string>
+    <string name="resetBtn">Reset game</string>
+    <string name="gameState" />
+    <string name="white_s_turn">White\'s Turn</string>
+    <string name="white_is_in_check">White is in Check!</string>
+    <string name="black_is_in_check">Black is in Check!</string>
 </resources>

@@ -14,11 +14,13 @@ public class ChessSquareAdapter extends BaseAdapter {
     private final List<Integer> colors;
     private final Context context;
     private String[][] chessBoardState;
+    private List<Integer> validMoves;
 
-    public ChessSquareAdapter(Context context, List<Integer> colors, String[][] chessBoardState) {
+    public ChessSquareAdapter(Context context, List<Integer> colors, String[][] chessBoardState, List<Integer> validMoves) {
         this.context = context;
         this.colors = colors;
         this.chessBoardState = chessBoardState;
+        this.validMoves = validMoves;
     }
 
     @Override
@@ -38,18 +40,18 @@ public class ChessSquareAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View square = convertView;
-        if (square == null) {
-            square = android.view.LayoutInflater.from(context).inflate(R.layout.square, parent, false);
+        View view = convertView;
+        if (view == null) {
+            view = android.view.LayoutInflater.from(context).inflate(R.layout.square, parent, false);
 
             // Calculate the size of each square dynamically
             int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
             int squareSize = screenWidth / 8; // Divide the screen width into 8 equal parts
 
             // Set the size of the square
-            square.setLayoutParams(new GridView.LayoutParams(squareSize, squareSize));
+            view.setLayoutParams(new GridView.LayoutParams(squareSize, squareSize));
         }
-        square.setBackgroundColor(colors.get(position));
+        view.setBackgroundColor(colors.get(position));
 
         // Calculate row and column from position
         int row = position / 8;
@@ -58,10 +60,8 @@ public class ChessSquareAdapter extends BaseAdapter {
         // Get the piece at this position
         String piece = chessBoardState[row][col];
 
-        // Set the piece image
-        ImageView squareImage = square.findViewById(R.id.square_image);
+        ImageView squareImage = view.findViewById(R.id.square_image);
         if (!piece.isEmpty()) {
-            // Get the drawable resource ID for the piece
             int resId = getDrawableResourceForPiece(piece);
             squareImage.setImageResource(resId);
         } else {
@@ -69,7 +69,13 @@ public class ChessSquareAdapter extends BaseAdapter {
             squareImage.setImageDrawable(null);
         }
 
-        return square;
+        if (validMoves.contains(position)) {
+            view.setBackgroundColor(Color.parseColor("#4CAF50")); // Green highlight
+        } else {
+            view.setBackgroundColor(colors.get(position)); // Original color
+        }
+
+        return view;
     }
 
     private int getDrawableResourceForPiece(String piece) {
@@ -93,6 +99,11 @@ public class ChessSquareAdapter extends BaseAdapter {
     // Update the chessboard state
     public void updateChessBoardState(String[][] newChessBoardState) {
         this.chessBoardState = newChessBoardState;
-        notifyDataSetChanged(); // Refresh the adapter
     }
+
+    public void updateValidMoves(List<Integer> validMoves) {
+        this.validMoves = validMoves;
+        notifyDataSetChanged();
+    }
+
 }
