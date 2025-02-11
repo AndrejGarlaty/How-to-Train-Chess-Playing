@@ -12,8 +12,8 @@ public class ChessGame {
     private int fullMoveNumber = 1;
     private int whiteKingRow = 0, whiteKingCol = 4;
     private int blackKingRow = 7, blackKingCol = 4;
-    private boolean whiteIsInCheck = false;
-    private boolean blackIsInCheck = false;
+    private boolean whiteInCheck = false;
+    private boolean blackInCheck = false;
 
     public ChessGame() {
         initializeChessBoard();
@@ -72,7 +72,7 @@ public class ChessGame {
             boolean isStillInCheck = isSquareUnderAttack(kingRow, kingCol, tempBoard, !isWhiteTurn);
 
             // If the player was in check, the move must resolve it
-            if ((isWhiteTurn && whiteIsInCheck) || (!isWhiteTurn && blackIsInCheck)) {
+            if ((isWhiteTurn && whiteInCheck) || (!isWhiteTurn && blackInCheck)) {
                 isValid = !isStillInCheck;
             } else {
                 // If not in check, the move must not put the king in check
@@ -147,7 +147,7 @@ public class ChessGame {
         }
 
         // Check if king is currently in check
-        if (isWhite ? whiteIsInCheck : blackIsInCheck) return false;
+        if (isWhite ? whiteInCheck : blackInCheck) return false;
 
         // Check path is clear
         int colStep = kingside ? 1 : -1;
@@ -171,7 +171,7 @@ public class ChessGame {
         for (int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
                 String piece = board[r][c];
-                if (piece.isEmpty() || (Character.isUpperCase(piece.charAt(0)) == isWhiteTurn)) continue;
+                if (piece.isEmpty() || (Character.isUpperCase(piece.charAt(0)) != isAttackerWhite)) continue;
 
                 boolean isWhitePiece = Character.isUpperCase(piece.charAt(0));
                 if (isWhitePiece != isAttackerWhite) continue;
@@ -206,7 +206,7 @@ public class ChessGame {
     }
 
     public boolean isCheckmate() {
-        boolean inCheck = isWhiteTurn ? whiteIsInCheck : blackIsInCheck;
+        boolean inCheck = isWhiteTurn ? whiteInCheck : blackInCheck;
         if (!inCheck) return false;
 
         for (int fromRow = 0; fromRow < 8; fromRow++) {
@@ -316,16 +316,24 @@ public class ChessGame {
     }
 
     private void updateCheckStatus() {
-        whiteIsInCheck = isSquareUnderAttack(whiteKingRow, whiteKingCol, board, false);
-        blackIsInCheck = isSquareUnderAttack(blackKingRow, blackKingCol, board, true);
+        whiteInCheck = isSquareUnderAttack(whiteKingRow, whiteKingCol, board, false);
+        blackInCheck = isSquareUnderAttack(blackKingRow, blackKingCol, board, true);
     }
 
-    public boolean isWhiteIsInCheck() {
-        return whiteIsInCheck;
+    public int[] getWhiteKingPosition() {
+        return new int[]{whiteKingRow, whiteKingCol};
     }
 
-    public boolean isBlackIsInCheck() {
-        return blackIsInCheck;
+    public int[] getBlackKingPosition() {
+        return new int[]{blackKingRow, blackKingCol};
+    }
+
+    public boolean isWhiteInCheck() {
+        return whiteInCheck;
+    }
+
+    public boolean isBlackInCheck() {
+        return blackInCheck;
     }
 
     public boolean isWhiteTurn() {

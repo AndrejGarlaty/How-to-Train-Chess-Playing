@@ -36,16 +36,6 @@
             android:textStyle="bold"
             android:text="@string/white_s_turn"/>
 
-        <TextView
-            android:id="@+id/checkStatus"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="16sp"
-            android:textColor="#FF0000"
-            android:textAlignment="center"
-            android:text="@string/gameState"/>
-
         <Button
             android:id="@+id/resetButton"
             android:layout_width="wrap_content"

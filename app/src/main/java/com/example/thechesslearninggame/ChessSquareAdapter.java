@@ -1,13 +1,13 @@
 package com.example.thechesslearninggame;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChessSquareAdapter extends BaseAdapter {
@@ -15,6 +15,7 @@ public class ChessSquareAdapter extends BaseAdapter {
     private final Context context;
     private String[][] chessBoardState;
     private List<Integer> validMoves;
+    private List<Integer> checkRed = new ArrayList<>();
 
     public ChessSquareAdapter(Context context, List<Integer> colors, String[][] chessBoardState, List<Integer> validMoves) {
         this.context = context;
@@ -61,18 +62,26 @@ public class ChessSquareAdapter extends BaseAdapter {
         String piece = chessBoardState[row][col];
 
         ImageView squareImage = view.findViewById(R.id.square_image);
+        View validMoveIndicator = view.findViewById(R.id.validMoveIndicator);
+        View checkBackground = view.findViewById(R.id.checkBackground);
+
         if (!piece.isEmpty()) {
             int resId = getDrawableResourceForPiece(piece);
             squareImage.setImageResource(resId);
         } else {
-            // Clear the image if the square is empty
             squareImage.setImageDrawable(null);
         }
 
         if (validMoves.contains(position)) {
-            view.setBackgroundColor(Color.parseColor("#4CAF50")); // Green highlight
+            validMoveIndicator.setVisibility(View.VISIBLE);
         } else {
-            view.setBackgroundColor(colors.get(position)); // Original color
+            validMoveIndicator.setVisibility(View.GONE);
+        }
+
+        if (checkRed!=null && !checkRed.isEmpty() && checkRed.contains(position)) {
+            checkBackground.setVisibility(View.VISIBLE);
+        } else {
+            checkBackground.setVisibility(View.GONE);
         }
 
         return view;
@@ -96,13 +105,17 @@ public class ChessSquareAdapter extends BaseAdapter {
         };
     }
 
-    // Update the chessboard state
     public void updateChessBoardState(String[][] newChessBoardState) {
         this.chessBoardState = newChessBoardState;
     }
 
     public void updateValidMoves(List<Integer> validMoves) {
         this.validMoves = validMoves;
+        notifyDataSetChanged();
+    }
+
+    public void updateCheckBackgroundHighlighting(List<Integer> checkRed) {
+        this.checkRed = checkRed;
         notifyDataSetChanged();
     }
 

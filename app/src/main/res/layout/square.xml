@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/square_image"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scaleType="centerInside"
-    android:background="@android:color/transparent"/>
+    android:padding="4dp">
+
+    <View
+        android:id="@+id/checkBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CBE91E63"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/square_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:background="@android:color/transparent"/>
+
+    <View
+        android:id="@+id/validMoveIndicator"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:background="@color/validGreen"/>
+
+
+
+</FrameLayout>

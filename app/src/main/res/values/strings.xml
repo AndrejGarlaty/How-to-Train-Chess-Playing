@@ -5,4 +5,7 @@
     <string name="white_s_turn">White\'s Turn</string>
     <string name="white_is_in_check">White is in Check!</string>
     <string name="black_is_in_check">Black is in Check!</string>
+    <string name="game_over_black_wins">Game over! Black wins</string>
+    <string name="game_over_white_wins">Game over! White wins</string>
+    <string name="black_s_turn">Black\'s Turn</string>
 </resources>

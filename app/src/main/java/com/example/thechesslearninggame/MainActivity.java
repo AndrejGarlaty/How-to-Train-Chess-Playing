@@ -15,33 +15,26 @@ public class MainActivity extends AppCompatActivity {
     private ChessSquareAdapter adapter;
     private ChessGame chessGame;
     private TextView turnIndicator;
-    private TextView checkStatus;
     private Button resetButton;
 
-    // Selection and valid move tracking
     private int selectedRow = -1;
     private int selectedCol = -1;
     private final List<Integer> validMoves = new ArrayList<>();
+    private final List<Integer> redForCheck = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize UI components
         turnIndicator = findViewById(R.id.turnIndicator);
-        checkStatus = findViewById(R.id.checkStatus);
         resetButton = findViewById(R.id.resetButton);
         chessboard = findViewById(R.id.chessboard);
 
-        // Initialize game
         chessGame = new ChessGame();
         setupBoard();
 
-        // Reset button click listener
         resetButton.setOnClickListener(v -> resetGame());
-
-        // Chessboard click handler
         chessboard.setOnItemClickListener((parent, view, position, id) -> {
             int row = position / 8;
             int col = position % 8;
@@ -50,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBoard() {
-        // Create board colors and initialize adapter
         List<Integer> colors = new ArrayList<>();
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -70,14 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleSquareClick(int row, int col) {
         if (selectedRow == -1) {
-            // Select piece
             if (isValidSelection(row, col)) {
                 selectedRow = row;
                 selectedCol = col;
                 showValidMoves(row, col);
             }
         } else {
-            // Move piece
             if (validMoves.contains(row * 8 + col)) {
                 chessGame.movePiece(selectedRow, selectedCol, row, col);
                 clearSelection();
@@ -114,17 +104,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateGameStatus() {
-        turnIndicator.setText(chessGame.isWhiteTurn() ? "White's Turn" : "Black's Turn");
-
-        if (chessGame.isWhiteIsInCheck()) {
-            checkStatus.setText(R.string.white_is_in_check);
-        } else if (chessGame.isBlackIsInCheck()) {
-            checkStatus.setText(R.string.black_is_in_check);
+        if (chessGame.isBlackInCheck()) {
+            int[] blackKingPos = chessGame.getBlackKingPosition();
+            redForCheck.add(blackKingPos[0] * 8 + blackKingPos[1]);
+            adapter.updateCheckBackgroundHighlighting(redForCheck);
+        } else if (chessGame.isWhiteInCheck()) {
+            int[] whiteKingPosition = chessGame.getWhiteKingPosition();
+            redForCheck.add(whiteKingPosition[0] * 8 + whiteKingPosition[1]);
+            adapter.updateCheckBackgroundHighlighting(redForCheck);
         } else {
-            checkStatus.setText("");
+            redForCheck.clear();
+            adapter.updateCheckBackgroundHighlighting(null);
         }
 
-        // Update board display
+        turnIndicator.setText(chessGame.isWhiteTurn() ? R.string.white_s_turn : R.string.black_s_turn);
+        if (chessGame.isCheckmate()) {
+            if (chessGame.isWhiteTurn()) {
+                turnIndicator.setText(R.string.game_over_black_wins);
+            } else {
+                turnIndicator.setText(R.string.game_over_white_wins);
+            }
+        } //todo draw?
         adapter.updateChessBoardState(chessGame.getBoard());
     }
 
