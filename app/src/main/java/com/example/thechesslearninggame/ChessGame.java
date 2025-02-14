@@ -307,7 +307,12 @@ public class ChessGame {
 
         // Handle pawn promotion
         if (piece.equalsIgnoreCase("P") && (toRow == 0 || toRow == 7)) {
-            board[toRow][toCol] = "Q";
+            if (isWhiteTurn()) {
+                board[toRow][toCol] = "Q";
+            } else {
+                board[toRow][toCol] = "q";
+            }
+
         }
 
         updateCheckStatus();
