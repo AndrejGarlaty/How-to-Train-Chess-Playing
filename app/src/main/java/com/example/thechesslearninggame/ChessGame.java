@@ -40,7 +40,7 @@ public class ChessGame {
         String targetPiece = board[toRow][toCol];
         if (!targetPiece.isEmpty()) {
             if (Character.isUpperCase(targetPiece.charAt(0)) == isWhiteTurn) return false;
-            if (targetPiece.equalsIgnoreCase("K")) return false;
+            //if (targetPiece.equalsIgnoreCase("K")) return false;
         }
 
         // Validate piece movement
@@ -181,7 +181,7 @@ public class ChessGame {
 
                 switch (piece.toUpperCase()) {
                     case "P":
-                        int pawnDirection = isWhitePiece ? -1 : 1;
+                        int pawnDirection = isWhitePiece ? 1 : -1;
                         if (colDiff == 1 && r + pawnDirection == row) return true;
                         break;
                     case "N":
