@@ -8,4 +8,7 @@
     <string name="game_over_black_wins">Game over! Black wins</string>
     <string name="game_over_white_wins">Game over! White wins</string>
     <string name="black_s_turn">Black\'s Turn</string>
+    <string name="play_local">Play on One Device</string>
+    <string name="play_vs_stockfish">Play vs Stockfish</string>
+    <string name="exit">Exit</string>
 </resources>

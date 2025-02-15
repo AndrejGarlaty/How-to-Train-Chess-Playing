@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class ChessActivity extends AppCompatActivity {
 
     private GridView chessboard;
     private ChessSquareAdapter adapter;
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_chess);
 
         turnIndicator = findViewById(R.id.turnIndicator);
         resetButton = findViewById(R.id.resetButton);
