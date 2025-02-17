@@ -33,6 +33,7 @@ public class ChessActivity extends AppCompatActivity {
 
         chessGame = new ChessGame();
         setupBoard();
+        //chessGame.generateFEN();
 
         resetButton.setOnClickListener(v -> resetGame());
         chessboard.setOnItemClickListener((parent, view, position, id) -> {
@@ -126,6 +127,7 @@ public class ChessActivity extends AppCompatActivity {
             }
         } //todo draw?
         adapter.updateChessBoardState(chessGame.getBoard());
+        chessGame.updateFEN();
     }
 
     private void resetGame() {

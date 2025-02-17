@@ -1,5 +1,7 @@
 package com.example.thechesslearninggame;
 
+import java.util.Arrays;
+
 public class ChessGame {
     private String[][] board = new String[8][8];
     private boolean isWhiteTurn = true;
@@ -10,25 +12,24 @@ public class ChessGame {
     private int[] enPassantSquare = {-1, -1};
     private int halfMoveClock = 0;
     private int fullMoveNumber = 1;
-    private int whiteKingRow = 0, whiteKingCol = 4;
-    private int blackKingRow = 7, blackKingCol = 4;
+    private int whiteKingRow = 7, whiteKingCol = 4;
+    private int blackKingRow = 0, blackKingCol = 4;
     private boolean whiteInCheck = false;
     private boolean blackInCheck = false;
+    private String fenString;
 
     public ChessGame() {
         initializeChessBoard();
     }
 
     private void initializeChessBoard() {
-        board[0] = new String[]{"R", "N", "B", "Q", "K", "B", "N", "R"};
-        board[1] = new String[]{"P", "P", "P", "P", "P", "P", "P", "P"};
+        board[0] = new String[]{"r", "n", "b", "q", "k", "b", "n", "r"};
+        board[1] = new String[]{"p", "p", "p", "p", "p", "p", "p", "p"};
         for (int i = 2; i < 6; i++) {
-            for (int j = 0; j < 8; j++) {
-                board[i][j] = "";
-            }
+            Arrays.fill(board[i], "");
         }
-        board[6] = new String[]{"p", "p", "p", "p", "p", "p", "p", "p"};
-        board[7] = new String[]{"r", "n", "b", "q", "k", "b", "n", "r"};
+        board[6] = new String[]{"P", "P", "P", "P", "P", "P", "P", "P"};
+        board[7] = new String[]{"R", "N", "B", "Q", "K", "B", "N", "R"};
     }
 
     public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol) {
@@ -68,6 +69,13 @@ public class ChessGame {
                 kingCol = toCol;
             }
 
+            // Handle en passant capture in the simulation
+            if (piece.equalsIgnoreCase("P") && toRow == enPassantSquare[0] && toCol == enPassantSquare[1]) {
+                // Remove the captured pawn
+                int capturedPawnRow = isWhiteTurn ? toRow + 1 : toRow - 1;
+                tempBoard[capturedPawnRow][toCol] = "";
+            }
+
             // Check if the king is still under attack using the TEMP board
             boolean isStillInCheck = isSquareUnderAttack(kingRow, kingCol, tempBoard, !isWhiteTurn);
 
@@ -97,8 +105,8 @@ public class ChessGame {
     }
 
     private boolean validatePawnMove(int fromRow, int fromCol, int toRow, int toCol) {
-        int direction = isWhiteTurn ? 1 : -1;
-        int startRow = isWhiteTurn ? 1 : 6;
+        int direction = isWhiteTurn ? -1 : 1;
+        int startRow = isWhiteTurn ? 6 : 1;
 
         // Basic forward move (one step)
         if (fromCol == toCol && board[toRow][toCol].isEmpty()) {
@@ -112,7 +120,7 @@ public class ChessGame {
         // Capture (diagonal move)
         if (Math.abs(toCol - fromCol) == 1 && toRow == fromRow + direction) {
             if (!board[toRow][toCol].isEmpty()) {
-                return true; // Regular capture
+                return true;
             }
             // En Passant check
             return enPassantSquare != null && toRow == enPassantSquare[0] && toCol == enPassantSquare[1] &&
@@ -181,7 +189,7 @@ public class ChessGame {
 
                 switch (piece.toUpperCase()) {
                     case "P":
-                        int pawnDirection = isWhitePiece ? 1 : -1;
+                        int pawnDirection = isWhitePiece ? -1 : 1;
                         if (colDiff == 1 && r + pawnDirection == row) return true;
                         break;
                     case "N":
@@ -263,6 +271,13 @@ public class ChessGame {
         board[toRow][toCol] = piece;
         board[fromRow][fromCol] = "";
 
+        // Track state changes for FEN generation
+        boolean wasWhiteTurn = isWhiteTurn;
+        String movedPiece = board[fromRow][fromCol];
+        String capturedPiece = board[toRow][toCol];
+        boolean isPawnMove = movedPiece.equalsIgnoreCase("P");
+        boolean isCapture = !capturedPiece.isEmpty();
+
         if (piece.equalsIgnoreCase("K")) {
             if (isWhiteTurn) {
                 whiteKingRow = toRow;
@@ -287,11 +302,11 @@ public class ChessGame {
 
         if (piece.equalsIgnoreCase("R")) {
             if (isWhiteTurn) {
-                if (fromRow == 0 && fromCol == 0) whiteCastleQueenside = false;
-                else if (fromRow == 0 && fromCol == 7) whiteCastleKingside = false;
+                if (fromRow == 7 && fromCol == 0) whiteCastleQueenside = false;
+                else if (fromRow == 7 && fromCol == 7) whiteCastleKingside = false;
             } else {
-                if (fromRow == 7 && fromCol == 0) blackCastleQueenside = false;
-                else if (fromRow == 7 && fromCol == 7) blackCastleKingside = false;
+                if (fromRow == 0 && fromCol == 0) blackCastleQueenside = false;
+                else if (fromRow == 0 && fromCol == 7) blackCastleKingside = false;
             }
         }
 
@@ -313,6 +328,18 @@ public class ChessGame {
                 board[toRow][toCol] = "q";
             }
 
+        }
+
+        // Update half-move clock
+        if (isPawnMove || isCapture) {
+            halfMoveClock = 0;
+        } else {
+            halfMoveClock++;
+        }
+
+        // Update full move number after black's move
+        if (!wasWhiteTurn) {
+            fullMoveNumber++;
         }
 
         updateCheckStatus();
@@ -343,5 +370,64 @@ public class ChessGame {
 
     public boolean isWhiteTurn() {
         return isWhiteTurn;
+    }
+
+    public void updateFEN() {
+        fenString = getPiecePlacement() + " " +
+                getActiveColor() + " " +
+                getCastlingRights() + " " +
+                getEnPassant() + " " +
+                halfMoveClock + " " +
+                fullMoveNumber;
+    }
+
+    private String getPiecePlacement() {
+        StringBuilder placement = new StringBuilder();
+        for (int rank = 0; rank < 8; rank++) {
+            int emptyCount = 0;
+            for (int file = 0; file < 8; file++) {
+                String piece = board[rank][file];
+                if (piece.isEmpty()) {
+                    emptyCount++;
+                } else {
+                    if (emptyCount > 0) {
+                        placement.append(emptyCount);
+                        emptyCount = 0;
+                    }
+                    placement.append(piece);
+                }
+            }
+            if (emptyCount > 0) {
+                placement.append(emptyCount);
+            }
+            if (rank < 7) {
+                placement.append("/");
+            }
+        }
+        return placement.toString();
+    }
+
+    private String getActiveColor() {
+        return isWhiteTurn ? "w" : "b";
+    }
+
+    private String getCastlingRights() {
+        StringBuilder rights = new StringBuilder();
+        if (whiteCastleKingside) rights.append('K');
+        if (whiteCastleQueenside) rights.append('Q');
+        if (blackCastleKingside) rights.append('k');
+        if (blackCastleQueenside) rights.append('q');
+        return rights.length() > 0 ? rights.toString() : "-";
+    }
+
+    private String getEnPassant() {
+        if (enPassantSquare[0] == -1) return "-";
+        char file = (char) ('a' + enPassantSquare[1]);
+        int rank = 8 - enPassantSquare[0]; // Convert 0-based to 1-based
+        return "" + file + rank;
+    }
+
+    public String getFenString() {
+        return fenString;
     }
 }

@@ -11,4 +11,5 @@
     <string name="play_local">Play on One Device</string>
     <string name="play_vs_stockfish">Play vs Stockfish</string>
     <string name="exit">Exit</string>
+    <string name="fen">FEN: %s</string>
 </resources>
