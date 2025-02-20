@@ -25,8 +25,8 @@ public class MainMenuActivity extends AppCompatActivity {
 
         // Play against AI (Stockfish)
         btnStockfish.setOnClickListener(v -> {
-        //    Intent intent = new Intent(MainMenuActivity.this, StockfishActivity.class);
-         //   startActivity(intent);
+            Intent intent = new Intent(MainMenuActivity.this, StockfishActivity.class);
+            startActivity(intent);
         });
 
         btnExit.setOnClickListener(v -> finish());

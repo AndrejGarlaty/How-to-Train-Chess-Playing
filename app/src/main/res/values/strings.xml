@@ -12,4 +12,7 @@
     <string name="play_vs_stockfish">Play vs Stockfish</string>
     <string name="exit">Exit</string>
     <string name="fen">FEN: %s</string>
+    <string name="engine_thinking">Engine is thinking…</string>
+    <string name="engine_ready">Engine ready</string>
+    <string name="engine_error">Engine error</string>
 </resources>
