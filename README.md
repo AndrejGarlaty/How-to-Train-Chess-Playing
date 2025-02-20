@@ -1,0 +1,1 @@
+This application includes the Stockfish chess engine, which is licensed under the GNU General Public License (GPL) version 3. This application is also licensed under the GPL. More info at http://www.gnu.org/licenses/
