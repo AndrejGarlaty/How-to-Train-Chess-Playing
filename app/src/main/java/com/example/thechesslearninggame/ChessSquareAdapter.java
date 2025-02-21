@@ -6,6 +6,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +51,6 @@ public class ChessSquareAdapter extends BaseAdapter {
             // Calculate the size of each square dynamically
             int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
             int squareSize = screenWidth / 8; // Divide the screen width into 8 equal parts
-
             // Set the size of the square
             view.setLayoutParams(new GridView.LayoutParams(squareSize, squareSize));
         }
@@ -57,6 +59,32 @@ public class ChessSquareAdapter extends BaseAdapter {
         // Calculate row and column from position
         int row = position / 8;
         int col = position % 8;
+
+        TextView coordLeft = view.findViewById(R.id.coord_right);
+        TextView coordBottom = view.findViewById(R.id.coord_bottom);
+
+        if (col == 7) {
+            coordLeft.setText(String.valueOf(8 - row)); // 8 for row 0, 1 for row 7
+            coordLeft.setVisibility(View.VISIBLE);
+        } else {
+            coordLeft.setVisibility(View.GONE);
+        }
+
+        // Show bottom coordinate (letters) on last row
+        if (row == 7) {
+            coordBottom.setText(String.valueOf((char) ('a' + col))); // a-h
+            coordBottom.setVisibility(View.VISIBLE);
+        } else {
+            coordBottom.setVisibility(View.GONE);
+        }
+
+        boolean isLightSquare = (row + col) % 2 == 0;
+        int textColor = isLightSquare ?
+                ContextCompat.getColor(context, R.color.colorPrimary) :
+                ContextCompat.getColor(context, R.color.chessBoardLight);
+
+        coordLeft.setTextColor(textColor);
+        coordBottom.setTextColor(textColor);
 
         // Get the piece at this position
         String piece = chessBoardState[row][col];

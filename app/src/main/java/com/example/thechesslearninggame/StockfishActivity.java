@@ -2,6 +2,7 @@ package com.example.thechesslearninggame;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -12,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockfishActivity extends AppCompatActivity {
+public class StockfishActivity extends AppCompatActivity implements VoiceInputManager.VoiceInputListener {
 
     private GridView chessboard;
     private ChessSquareAdapter adapter;
@@ -24,6 +25,8 @@ public class StockfishActivity extends AppCompatActivity {
     private StockfishManager stockfishManager;
     private boolean isPlayerTurn = true;
     private boolean isGameActive = false;
+
+    private VoiceInputManager voiceInputManager;
 
     private int selectedRow = -1;
     private int selectedCol = -1;
@@ -41,7 +44,7 @@ public class StockfishActivity extends AppCompatActivity {
 
         chessGame = new ChessGame();
         setupBoard();
-
+        voiceInputManager = new VoiceInputManager(this, this);
         stockfishManager = new StockfishManager(this);
         initializeEngine();
 
@@ -178,7 +181,7 @@ public class StockfishActivity extends AppCompatActivity {
         super.onDestroy();
         stockfishManager.shutdown();
         Toast.makeText(StockfishActivity.this, "engine shut down", Toast.LENGTH_SHORT).show();
-
+        voiceInputManager.destroy();
     }
 
     private boolean isValidSelection(int row, int col) {
@@ -233,4 +236,36 @@ public class StockfishActivity extends AppCompatActivity {
         chessGame.updateFEN();
     }
 
+
+    @Override
+    public void onVoiceCommandRecognized(String command) {
+        Log.d("voiceInput", command);
+        // Here, pass the recognized command to your chess logic module for parsing.
+        // For example:
+      /*  ChessMove move = chessGameLogic.parseMove(command);
+        if (move != null && chessGameLogic.isLegal(move)) {
+            chessGameLogic.applyMove(move);
+            // Update your UI view accordingly.
+        } else {
+            // Optionally provide feedback that the move was invalid or unrecognized.
+        }*/
+    }
+
+    @Override
+    public void onError(int errorCode) {
+        // Handle errors (e.g., show a message to the user)
+        Log.e("VoiceInput", "Speech recognition error: " + errorCode);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        voiceInputManager.stopListening();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        voiceInputManager.startListening();
+    }
 }

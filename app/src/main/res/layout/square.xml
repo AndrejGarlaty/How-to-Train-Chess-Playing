@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="4dp">
+    android:layout_height="match_parent">
 
     <View
         android:id="@+id/checkBackground"
@@ -26,6 +25,24 @@
         android:visibility="gone"
         android:background="@color/validGreen"/>
 
+    <TextView
+        android:id="@+id/coord_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#80000000"
+        android:padding="2dp"/>
 
+    <TextView
+        android:id="@+id/coord_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:padding="2dp"/>
 
 </FrameLayout>
