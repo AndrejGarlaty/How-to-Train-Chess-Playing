@@ -1,5 +1,7 @@
 package com.example.thechesslearninggame;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,25 +10,31 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockfishActivity extends AppCompatActivity implements VoiceInputManager.VoiceInputListener {
-
+public class StockfishActivity extends AppCompatActivity {
+    private final String TAG = "StockfishActivity";
     private GridView chessboard;
     private ChessSquareAdapter adapter;
     private ChessGame chessGame;
     private TextView turnIndicator;
     private Button resetButton;
+    private Button voiceButton;
+
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 191;
+    private VoiceOutputManager voiceOutputManager;
+    private VoiceInputManager voiceInputManager;
 
     private boolean isEngineThinking = false;
     private StockfishManager stockfishManager;
     private boolean isPlayerTurn = true;
     private boolean isGameActive = false;
-
-    private VoiceInputManager voiceInputManager;
 
     private int selectedRow = -1;
     private int selectedCol = -1;
@@ -36,15 +44,15 @@ public class StockfishActivity extends AppCompatActivity implements VoiceInputMa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chess);
+        setContentView(R.layout.activity_stockfish);
 
         turnIndicator = findViewById(R.id.turnIndicator);
         resetButton = findViewById(R.id.resetButton);
         chessboard = findViewById(R.id.chessboard);
+        voiceButton = findViewById(R.id.voiceButton);
 
         chessGame = new ChessGame();
         setupBoard();
-        voiceInputManager = new VoiceInputManager(this, this);
         stockfishManager = new StockfishManager(this);
         initializeEngine();
 
@@ -54,16 +62,38 @@ public class StockfishActivity extends AppCompatActivity implements VoiceInputMa
             int col = position % 8;
             handleSquareClick(row, col);
         });
+
+        voiceOutputManager = new VoiceOutputManager(this);
+        voiceInputManager = new VoiceInputManager(this, new VoiceInputManager.VoiceInputCallback() {
+            @Override
+            public void onVoiceInputResult(String text) {
+                //todo evaluate move
+                voiceOutputManager.speak(text);
+                Toast.makeText(StockfishActivity.this, text, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onVoiceInputError(String error) {
+                Toast.makeText(StockfishActivity.this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        voiceButton.setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(StockfishActivity.this,
+                    Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                voiceInputManager.startListening();
+            } else {
+                ActivityCompat.requestPermissions(StockfishActivity.this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        REQUEST_RECORD_AUDIO_PERMISSION);
+            }
+        });
     }
 
     private void initializeEngine() {
         stockfishManager.initialize(new StockfishManager.InitCallback() {
             @Override
             public void onSuccess() {
-                runOnUiThread(() -> {
-                    Toast.makeText(StockfishActivity.this,
-                            "Engine ready", Toast.LENGTH_SHORT).show();
-                });
+                runOnUiThread(() -> Log.i(TAG, "Engine ready."));
                 isGameActive = true;
             }
 
@@ -161,7 +191,8 @@ public class StockfishActivity extends AppCompatActivity implements VoiceInputMa
             chessGame.movePiece(fromRow, fromCol, toRow, toCol);
             updateGameStatus();
         } else {
-            Toast.makeText(StockfishActivity.this, "engine generated invalidMove: " + uciMove , Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "applyEngineMove: Engine generated invalidMove: " + uciMove);
+            Toast.makeText(StockfishActivity.this, "an error occurred, please restart the game", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -180,8 +211,9 @@ public class StockfishActivity extends AppCompatActivity implements VoiceInputMa
     protected void onDestroy() {
         super.onDestroy();
         stockfishManager.shutdown();
-        Toast.makeText(StockfishActivity.this, "engine shut down", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "onDestroy: engine shut down");
         voiceInputManager.destroy();
+        voiceOutputManager.shutdown();
     }
 
     private boolean isValidSelection(int row, int col) {
@@ -236,36 +268,18 @@ public class StockfishActivity extends AppCompatActivity implements VoiceInputMa
         chessGame.updateFEN();
     }
 
-
     @Override
-    public void onVoiceCommandRecognized(String command) {
-        Log.d("voiceInput", command);
-        // Here, pass the recognized command to your chess logic module for parsing.
-        // For example:
-      /*  ChessMove move = chessGameLogic.parseMove(command);
-        if (move != null && chessGameLogic.isLegal(move)) {
-            chessGameLogic.applyMove(move);
-            // Update your UI view accordingly.
-        } else {
-            // Optionally provide feedback that the move was invalid or unrecognized.
-        }*/
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                voiceInputManager.startListening();
+            } else {
+                String msg = "Permission denied - cannot use speech features";
+                Log.i(TAG, "onRequestPermissionsResult: " + msg);
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
-    @Override
-    public void onError(int errorCode) {
-        // Handle errors (e.g., show a message to the user)
-        Log.e("VoiceInput", "Speech recognition error: " + errorCode);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        voiceInputManager.stopListening();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        voiceInputManager.startListening();
-    }
 }

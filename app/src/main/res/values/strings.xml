@@ -15,5 +15,5 @@
     <string name="engine_thinking">Engine is thinking…</string>
     <string name="engine_ready">Engine ready</string>
     <string name="engine_error">Engine error</string>
-    <string name="voice_btn">Activate Voice</string>
+    <string name="voice_button">Activate Voice</string>
 </resources>
