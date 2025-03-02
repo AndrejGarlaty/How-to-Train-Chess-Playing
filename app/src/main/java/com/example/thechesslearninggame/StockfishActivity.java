@@ -67,9 +67,12 @@ public class StockfishActivity extends AppCompatActivity {
         voiceInputManager = new VoiceInputManager(this, new VoiceInputManager.VoiceInputCallback() {
             @Override
             public void onVoiceInputResult(String text) {
-                //todo evaluate move
-                voiceOutputManager.speak(text);
-                Toast.makeText(StockfishActivity.this, text, Toast.LENGTH_SHORT).show();
+                String uciMove = ChessMoveParser.parseToUCI(text, chessGame);
+                if (uciMove != null) {
+                    //todo parsing bugfixing, pridat reakciu v pripade neuspechu
+                    applyEngineMove(uciMove);
+                    onPlayerMoveMade();
+                }
             }
             @Override
             public void onVoiceInputError(String error) {
@@ -166,7 +169,10 @@ public class StockfishActivity extends AppCompatActivity {
                     isEngineThinking = false;
                     isPlayerTurn = true;
                     Toast.makeText(StockfishActivity.this, uciMove, Toast.LENGTH_SHORT).show(); //debug
+                    //pridat validaciu ci je to validny tah predtym nez to povie
+                    String moveText = ChessMoveParser.toSpokenDescription(uciMove, chessGame, "sk");
                     applyEngineMove(uciMove);
+                    voiceOutputManager.speak(moveText);
                 });
             }
 
