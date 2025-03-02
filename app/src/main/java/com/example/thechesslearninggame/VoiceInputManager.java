@@ -30,10 +30,6 @@ public class VoiceInputManager {
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "sk-SK");
 
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 5000);
-        // Check if still listening before stopping:
-   //     new Handler(Looper.getMainLooper()).postDelayed(speechRecognizer::stopListening, 10000);
-
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
             public void onReadyForSpeech(android.os.Bundle params) {}
