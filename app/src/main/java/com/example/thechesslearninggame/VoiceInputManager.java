@@ -14,7 +14,7 @@ public class VoiceInputManager {
 
     public interface VoiceInputCallback {
         void onVoiceInputResult(String text);
-        void onVoiceInputError(String error);
+        void onVoiceInputError(String error, int errorCode);
     }
     private final String TAG = "VoiceInputManager";
     private final SpeechRecognizer speechRecognizer;
@@ -48,7 +48,7 @@ public class VoiceInputManager {
 
             @Override
             public void onError(int error) {
-                callback.onVoiceInputError(getErrorText(error));
+                callback.onVoiceInputError(getErrorText(error), error);
             }
 
             @Override
@@ -59,7 +59,7 @@ public class VoiceInputManager {
                     callback.onVoiceInputResult(text);
                 } else {
                     String message = "Nastala chyba, skúste ešte raz";
-                    callback.onVoiceInputError(message);
+                    callback.onVoiceInputError(message, -1);
                 }
             }
 
@@ -92,8 +92,7 @@ public class VoiceInputManager {
     }
 
     private String getErrorText(int errorCode) {
-        //todo toto logovat, vzdy vratit default hodnotu
-        return switch (errorCode) {
+        String msg = switch (errorCode) {
             case SpeechRecognizer.ERROR_AUDIO -> "Audio recording error";
             case SpeechRecognizer.ERROR_CLIENT -> "Client side error";
             case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions";
@@ -105,5 +104,7 @@ public class VoiceInputManager {
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech input";
             default -> "Didn't understand, please try again.";
         };
+        Log.e(TAG, msg);
+        return msg;
     }
 }

@@ -1,12 +1,16 @@
 package com.example.thechesslearninggame;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,9 +69,17 @@ public class StockfishActivity extends AppCompatActivity {
         });
 
         voiceOutputManager = new VoiceOutputManager(this);
+        voiceOutputManager.setOnTtsCompleteListener(
+                () -> new Handler(Looper.getMainLooper()).postDelayed(
+                        () -> {
+                                voiceInputManager.startListening();
+                                startProgressBarAnimation();
+                                }, 0));
+
         voiceInputManager = new VoiceInputManager(this, new VoiceInputManager.VoiceInputCallback() {
             @Override
             public void onVoiceInputResult(String text) {
+
                 String uciMove = ChessMoveParser.parseToUCI(text, chessGame);
                 if (uciMove != null) {
                     applyEngineMove(uciMove);
@@ -79,8 +91,13 @@ public class StockfishActivity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onVoiceInputError(String error) {
-                Toast.makeText(StockfishActivity.this, error, Toast.LENGTH_SHORT).show();
+            public void onVoiceInputError(String error, int errorCode) {
+                if (errorCode==7) { //restart listening due to timeout
+                    voiceInputManager.startListening();
+                    startProgressBarAnimation();
+                } else {
+                    Toast.makeText(StockfishActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -88,12 +105,26 @@ public class StockfishActivity extends AppCompatActivity {
             if (ContextCompat.checkSelfPermission(StockfishActivity.this,
                     Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                 voiceInputManager.startListening();
+                startProgressBarAnimation();
             } else {
                 ActivityCompat.requestPermissions(StockfishActivity.this,
                         new String[]{Manifest.permission.RECORD_AUDIO},
                         REQUEST_RECORD_AUDIO_PERMISSION);
             }
         });
+    }
+
+    private void startProgressBarAnimation() {
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setProgress(100);
+        ObjectAnimator animator = ObjectAnimator.ofInt(
+                progressBar,
+                "progress",
+                100,
+                0
+        );
+        animator.setDuration(3000);
+        animator.start();
     }
 
     private void initializeEngine() {
@@ -290,6 +321,7 @@ public class StockfishActivity extends AppCompatActivity {
         if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 voiceInputManager.startListening();
+                startProgressBarAnimation();
             } else {
                 String msg = "Permission denied - cannot use speech features";
                 Log.i(TAG, "onRequestPermissionsResult: " + msg);

@@ -1,7 +1,10 @@
 package com.example.thechesslearninggame;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,6 +15,15 @@ public class VoiceOutputManager implements TextToSpeech.OnInitListener {
     private final TextToSpeech tts;
     private final Context context;
     private boolean isInitialized = false;
+    private OnTtsCompleteListener onTtsCompleteListener;
+
+    public interface OnTtsCompleteListener {
+        void onTtsComplete();
+    }
+
+    public void setOnTtsCompleteListener(OnTtsCompleteListener listener) {
+        this.onTtsCompleteListener = listener;
+    }
 
     public VoiceOutputManager(Context context) {
         this.context = context;
@@ -28,6 +40,24 @@ public class VoiceOutputManager implements TextToSpeech.OnInitListener {
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
             } else {
                 isInitialized = true;
+                tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) {
+                    }
+
+                    @Override
+                    public void onDone(String utteranceId) {
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            if (onTtsCompleteListener != null) {
+                                onTtsCompleteListener.onTtsComplete();
+                            }
+                        }, 1000);
+                    }
+
+                    @Override
+                    public void onError(String utteranceId) {
+                    }
+                });
             }
         } else {
             String msg = "TTS initialization failed: " + status;
@@ -38,7 +68,8 @@ public class VoiceOutputManager implements TextToSpeech.OnInitListener {
 
     public void speak(String text) {
         if (isInitialized) {
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+            String utteranceId = "TTS_UTTERANCE";
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
         }
     }
 
