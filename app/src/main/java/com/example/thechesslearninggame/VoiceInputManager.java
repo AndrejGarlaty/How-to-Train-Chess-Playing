@@ -57,6 +57,9 @@ public class VoiceInputManager {
                 if (matches != null && !matches.isEmpty()) {
                     String text = matches.get(0);
                     callback.onVoiceInputResult(text);
+                } else {
+                    String message = "Nastala chyba, skúste ešte raz";
+                    callback.onVoiceInputError(message);
                 }
             }
 
@@ -89,6 +92,7 @@ public class VoiceInputManager {
     }
 
     private String getErrorText(int errorCode) {
+        //todo toto logovat, vzdy vratit default hodnotu
         return switch (errorCode) {
             case SpeechRecognizer.ERROR_AUDIO -> "Audio recording error";
             case SpeechRecognizer.ERROR_CLIENT -> "Client side error";

@@ -26,6 +26,7 @@ public class StockfishActivity extends AppCompatActivity {
     private TextView turnIndicator;
     private Button resetButton;
     private Button voiceButton;
+  //  private final Language language;
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 191;
     private VoiceOutputManager voiceOutputManager;
@@ -69,9 +70,12 @@ public class StockfishActivity extends AppCompatActivity {
             public void onVoiceInputResult(String text) {
                 String uciMove = ChessMoveParser.parseToUCI(text, chessGame);
                 if (uciMove != null) {
-                    //todo parsing bugfixing, pridat reakciu v pripade neuspechu
                     applyEngineMove(uciMove);
                     onPlayerMoveMade();
+                } else {
+                    String msg = "Nepovolený ťah.";
+                    Toast.makeText(StockfishActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    voiceOutputManager.speak(msg);
                 }
             }
             @Override
@@ -169,10 +173,16 @@ public class StockfishActivity extends AppCompatActivity {
                     isEngineThinking = false;
                     isPlayerTurn = true;
                     Toast.makeText(StockfishActivity.this, uciMove, Toast.LENGTH_SHORT).show(); //debug
-                    //pridat validaciu ci je to validny tah predtym nez to povie
+
                     String moveText = ChessMoveParser.toSpokenDescription(uciMove, chessGame, "sk");
                     applyEngineMove(uciMove);
-                    voiceOutputManager.speak(moveText);
+
+                    boolean isCheck = chessGame.isWhiteInCheck() || chessGame.isBlackInCheck();
+                    String check = null;
+                    if (isCheck) {
+                        check = ChessMoveParser.checkToSpokenDescription("sk", chessGame.isCheckmate());
+                    }
+                    voiceOutputManager.speak(check!=null ? moveText+check : moveText);
                 });
             }
 
@@ -197,7 +207,7 @@ public class StockfishActivity extends AppCompatActivity {
             chessGame.movePiece(fromRow, fromCol, toRow, toCol);
             updateGameStatus();
         } else {
-            Log.e(TAG, "applyEngineMove: Engine generated invalidMove: " + uciMove);
+            Log.e(TAG, "invalidMove: " + uciMove);
             Toast.makeText(StockfishActivity.this, "an error occurred, please restart the game", Toast.LENGTH_SHORT).show();
         }
     }
