@@ -123,7 +123,7 @@ public class StockfishActivity extends AppCompatActivity {
                 100,
                 0
         );
-        animator.setDuration(3000);
+        animator.setDuration(1500);
         animator.start();
     }
 
