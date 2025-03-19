@@ -7,8 +7,8 @@
     <string name="game_over_black_wins">Game over! Black wins</string>
     <string name="game_over_white_wins">Game over! White wins</string>
     <string name="black_s_turn">Black\'s Turn</string>
-    <string name="play_local">Play on One Device</string>
-    <string name="play_vs_stockfish">Play vs Stockfish</string>
+    <string name="play_local">Player vs Player</string>
+    <string name="play_vs_stockfish">Player vs AI</string>
     <string name="settings">Settings</string>
     <string name="fen">FEN: %s</string>
     <string name="engine_thinking">Engine is thinking…</string>
@@ -18,4 +18,9 @@
     <string name="select_language">Select Language</string>
     <string name="save_language">Save Language</string>
     <string name="save_settings">Save Settings</string>
+    <string name="error_occurred">Error occurred, try again.</string>
+    <string name="speech_recognition_unavailable">Speech recognition unavailable</string>
+    <string name="invalid_move">Invalid move.</string>
+    <string name="permission_denied">Permission denied - cannot use speech features</string>
+    <string name="speak">Speak</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.thechesslearninggame;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.speech.RecognitionListener;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class VoiceInputManager {
 
@@ -28,7 +31,9 @@ public class VoiceInputManager {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
         speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "sk-SK");
+        String languageValue = context.getSharedPreferences("AppSettings", MODE_PRIVATE)
+                .getString("selected_language", Locale.getDefault().getLanguage()).equals(Language.SLOVAK.getCode()) ? "sk-SK" : "en-US";
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageValue);
 
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
@@ -58,7 +63,7 @@ public class VoiceInputManager {
                     String text = matches.get(0);
                     callback.onVoiceInputResult(text);
                 } else {
-                    String message = "Nastala chyba, skúste ešte raz";
+                    String message = context.getString(R.string.error_occurred);
                     callback.onVoiceInputError(message, -1);
                 }
             }
@@ -79,7 +84,7 @@ public class VoiceInputManager {
         if (SpeechRecognizer.isRecognitionAvailable(context)) {
             speechRecognizer.startListening(speechRecognizerIntent);
         } else {
-            String msg = "Speech recognition unavailable";
+            String msg = context.getString(R.string.speech_recognition_unavailable);
             Log.i(TAG, msg);
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
         }
@@ -89,6 +94,10 @@ public class VoiceInputManager {
         if (speechRecognizer != null) {
             speechRecognizer.destroy();
         }
+    }
+
+    public void stopListening() {
+        speechRecognizer.stopListening();
     }
 
     private String getErrorText(int errorCode) {

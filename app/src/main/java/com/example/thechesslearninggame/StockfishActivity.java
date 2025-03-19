@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class StockfishActivity extends BaseActivity {
     private final String TAG = "StockfishActivity";
@@ -29,7 +30,7 @@ public class StockfishActivity extends BaseActivity {
     private TextView turnIndicator;
     private Button resetButton;
     private Button voiceButton;
-  //  private final Language language;
+    private Language language;
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 191;
     private VoiceOutputManager voiceOutputManager;
@@ -49,6 +50,10 @@ public class StockfishActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stockfish);
+
+        String lang = this.getSharedPreferences("AppSettings", MODE_PRIVATE)
+                .getString("selected_language", Locale.getDefault().getLanguage());
+        language = lang.equals(Language.SLOVAK.getCode()) ? Language.SLOVAK : Language.ENGLISH;
 
         turnIndicator = findViewById(R.id.turnIndicator);
         resetButton = findViewById(R.id.resetButton);
@@ -70,21 +75,20 @@ public class StockfishActivity extends BaseActivity {
         voiceOutputManager = new VoiceOutputManager(this);
         voiceOutputManager.setOnTtsCompleteListener(
                 () -> new Handler(Looper.getMainLooper()).postDelayed(
-                        () -> {
-                                voiceInputManager.startListening();
-                                startProgressBarAnimation();
-                                }, 0));
+                        this::startListening, 0));
 
         voiceInputManager = new VoiceInputManager(this, new VoiceInputManager.VoiceInputCallback() {
             @Override
             public void onVoiceInputResult(String text) {
-
+                Toast.makeText(StockfishActivity.this, text, Toast.LENGTH_SHORT).show();
+                voiceButton.setText(R.string.voice_button);
+                voiceButton.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
                 String uciMove = ChessMoveParser.parseToUCI(text, chessGame);
                 if (uciMove != null) {
                     applyEngineMove(uciMove);
                     onPlayerMoveMade();
                 } else {
-                    String msg = "Nepovolený ťah.";
+                    String msg = getMessage();
                     Toast.makeText(StockfishActivity.this, msg, Toast.LENGTH_SHORT).show();
                     voiceOutputManager.speak(msg);
                 }
@@ -92,8 +96,9 @@ public class StockfishActivity extends BaseActivity {
             @Override
             public void onVoiceInputError(String error, int errorCode) {
                 if (errorCode==7) { //restart listening due to timeout
-                    voiceInputManager.startListening();
-                    startProgressBarAnimation();
+                    startListening();
+                } else if (errorCode==8) { //recognition busy
+                    stopListening();
                 } else {
                     Toast.makeText(StockfishActivity.this, error, Toast.LENGTH_SHORT).show();
                 }
@@ -103,14 +108,30 @@ public class StockfishActivity extends BaseActivity {
         voiceButton.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(StockfishActivity.this,
                     Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                voiceInputManager.startListening();
-                startProgressBarAnimation();
+                startListening();
             } else {
                 ActivityCompat.requestPermissions(StockfishActivity.this,
                         new String[]{Manifest.permission.RECORD_AUDIO},
                         REQUEST_RECORD_AUDIO_PERMISSION);
             }
         });
+    }
+
+    private String getMessage() {
+        return this.getString(R.string.invalid_move);
+    }
+
+    private void startListening() {
+        voiceInputManager.startListening();
+        startProgressBarAnimation();
+        voiceButton.setText(R.string.speak);
+        voiceButton.setBackgroundColor(ContextCompat.getColor(this, R.color.voiceBtnActive));
+    }
+
+    private void stopListening() {
+        voiceInputManager.stopListening();
+        voiceButton.setText(R.string.voice_button);
+        voiceButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
     }
 
     private void startProgressBarAnimation() {
@@ -130,7 +151,7 @@ public class StockfishActivity extends BaseActivity {
         stockfishManager.initialize(new StockfishManager.InitCallback() {
             @Override
             public void onSuccess() {
-                runOnUiThread(() -> Log.i(TAG, "Engine ready."));
+                runOnUiThread(() -> Log.i(TAG, getBaseContext().getString(R.string.engine_ready)));
                 isGameActive = true;
             }
 
@@ -204,13 +225,13 @@ public class StockfishActivity extends BaseActivity {
                     isPlayerTurn = true;
                     Toast.makeText(StockfishActivity.this, uciMove, Toast.LENGTH_SHORT).show(); //debug
 
-                    String moveText = ChessMoveParser.toSpokenDescription(uciMove, chessGame, "sk");
+                    String moveText = ChessMoveParser.toSpokenDescription(uciMove, chessGame, language.getCode());
                     applyEngineMove(uciMove);
 
                     boolean isCheck = chessGame.isWhiteInCheck() || chessGame.isBlackInCheck();
                     String check = null;
                     if (isCheck) {
-                        check = ChessMoveParser.checkToSpokenDescription("sk", chessGame.isCheckmate());
+                        check = ChessMoveParser.checkToSpokenDescription(language.getCode(), chessGame.isCheckmate());
                     }
                     voiceOutputManager.speak(check!=null ? moveText+check : moveText);
                 });
@@ -319,10 +340,9 @@ public class StockfishActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                voiceInputManager.startListening();
-                startProgressBarAnimation();
+                startListening();
             } else {
-                String msg = "Permission denied - cannot use speech features";
+                String msg = this.getString(R.string.permission_denied);
                 Log.i(TAG, "onRequestPermissionsResult: " + msg);
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
             }

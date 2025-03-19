@@ -1,5 +1,7 @@
 package com.example.thechesslearninggame;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,7 +35,9 @@ public class VoiceOutputManager implements TextToSpeech.OnInitListener {
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
-            int result = tts.setLanguage(new Locale("sk"));
+            String languageValue = context.getSharedPreferences("AppSettings", MODE_PRIVATE)
+                    .getString("selected_language", Locale.getDefault().getLanguage());
+            int result = tts.setLanguage(new Locale(languageValue));
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 String msg = "Language not supported";
                 Log.e(TAG, "onInit: " + msg);

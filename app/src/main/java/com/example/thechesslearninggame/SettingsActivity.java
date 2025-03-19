@@ -17,13 +17,13 @@ public class SettingsActivity extends BaseActivity {
         Button btnSave = findViewById(R.id.btn_save_language);
 
         String[] languages = {"Slovenský", "English"};
-        String[] languageCodes = {"sk", "en"};
+        String[] languageCodes = {Language.SLOVAK.getCode(), Language.ENGLISH.getCode()};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, languages);
         spinnerLanguage.setAdapter(adapter);
 
         SharedPreferences prefs = getSharedPreferences("AppSettings", MODE_PRIVATE);
-        spinnerLanguage.setSelection(prefs.getString("selected_language", Locale.getDefault().getLanguage()).equals("sk") ? 0 : 1);
+        spinnerLanguage.setSelection(prefs.getString("selected_language", Locale.getDefault().getLanguage()).equals(Language.SLOVAK.getCode()) ? 0 : 1);
 
         btnSave.setOnClickListener(v -> {
             int position = spinnerLanguage.getSelectedItemPosition();

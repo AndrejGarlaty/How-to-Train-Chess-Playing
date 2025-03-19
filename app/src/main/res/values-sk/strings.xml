@@ -9,7 +9,7 @@
     <string name="game_over_white_wins">Koniec hry! Biely vyhral</string>
     <string name="black_s_turn">Čierny na ťahu</string>
     <string name="play_local">Hrať na jednom zariadení</string>
-    <string name="play_vs_stockfish">Hrať proti šachovému programu</string>
+    <string name="play_vs_stockfish">Hrať proti AI</string>
     <string name="settings">Nastavenia</string>
     <string name="fen">FEN: %s</string>
     <string name="engine_thinking">Rozmýšľam</string>
@@ -19,4 +19,9 @@
     <string name="select_language">Vybrať jazyk</string>
     <string name="save_language">Uložiť jazyk</string>
     <string name="save_settings">Uložiť nastavenia</string>
+    <string name="error_occurred">Nastala chyba, skúste znova.</string>
+    <string name="speech_recognition_unavailable">Rozpoznávač reči nie je dostupný.</string>
+    <string name="invalid_move">Nepovolený ťah.</string>
+    <string name="permission_denied">Práva zamietnuté - nemožno použiť rozpoznávač reči</string>
+    <string name="speak">Hovorte</string>
 </resources>
