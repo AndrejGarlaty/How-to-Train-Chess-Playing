@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChessActivity extends AppCompatActivity {
+public class ChessActivity extends BaseActivity {
 
     private GridView chessboard;
     private ChessSquareAdapter adapter;

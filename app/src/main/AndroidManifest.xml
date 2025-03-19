@@ -26,6 +26,7 @@
 
         <activity android:name=".ChessActivity"/>
         <activity android:name=".StockfishActivity"/>
+        <activity android:name=".SettingsActivity"/>
     </application>
 
 </manifest>

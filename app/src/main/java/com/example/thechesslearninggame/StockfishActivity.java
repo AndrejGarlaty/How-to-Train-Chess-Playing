@@ -15,14 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockfishActivity extends AppCompatActivity {
+public class StockfishActivity extends BaseActivity {
     private final String TAG = "StockfishActivity";
     private GridView chessboard;
     private ChessSquareAdapter adapter;

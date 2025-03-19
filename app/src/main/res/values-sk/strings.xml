@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ako trénovať šachovú hru</string>
+    <string name="resetBtn">Reštart hry</string>
+    <string name="white_s_turn">Biely na ťahu</string>
+    <string name="white_is_in_check">Biely v šachu</string>
+    <string name="black_is_in_check">čierny v šachu</string>
+    <string name="game_over_black_wins">Koniec hry! Čierny vyhral</string>
+    <string name="game_over_white_wins">Koniec hry! Biely vyhral</string>
+    <string name="black_s_turn">Čierny na ťahu</string>
+    <string name="play_local">Hrať na jednom zariadení</string>
+    <string name="play_vs_stockfish">Hrať proti šachovému programu</string>
+    <string name="settings">Nastavenia</string>
+    <string name="fen">FEN: %s</string>
+    <string name="engine_thinking">Rozmýšľam</string>
+    <string name="engine_ready">Som pripravený</string>
+    <string name="engine_error">Problém so šachovým programom</string>
+    <string name="voice_button">Zapnúť mikrofón</string>
+    <string name="select_language">Vybrať jazyk</string>
+    <string name="save_language">Uložiť jazyk</string>
+    <string name="save_settings">Uložiť nastavenia</string>
+</resources>
