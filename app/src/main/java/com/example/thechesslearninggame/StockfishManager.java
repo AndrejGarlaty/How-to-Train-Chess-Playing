@@ -35,12 +35,12 @@ public class StockfishManager {
         this.context = context;
     }
 
-    public void initialize(InitCallback callback) {
+    public void initialize(int difficulty, InitCallback callback) {
         executor.execute(() -> {
             try {
                 File engineFile = extractEngineBinary();
                 startProcess(engineFile);
-                initializeUCI();
+                initializeUCI(difficulty);
                 callback.onSuccess();
             } catch (Exception e) {
                 callback.onError("Engine init failed: " + e.getMessage());
@@ -76,9 +76,10 @@ public class StockfishManager {
         outputWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
     }
 
-    private void initializeUCI() throws IOException {
+    private void initializeUCI(int difficulty) throws IOException {
         sendCommand("uci");
         waitForResponse("uciok");
+        sendCommand("setoption name Skill Level value " + difficulty);
         sendCommand("isready");
         waitForResponse("readyok");
     }

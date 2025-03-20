@@ -8,7 +8,7 @@
     android:padding="16dp"
     android:background="@color/design_default_color_background">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_local_game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,9 +16,9 @@
         android:textSize="18sp"
         android:padding="16dp"
         android:layout_marginBottom="24dp"
-        style="@style/MenuButtonStyle"/>
+        style="@style/Widget.Material3.Button"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_stockfish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,15 +26,15 @@
         android:textSize="18sp"
         android:padding="16dp"
         android:layout_marginBottom="24dp"
-        style="@style/MenuButtonStyle"/>
+        style="@style/Widget.Material3.Button"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/settings"
         android:textSize="18sp"
         android:padding="16dp"
-        style="@style/MenuButtonStyle"/>
+        style="@style/Widget.Material3.Button"/>
 
 </LinearLayout>

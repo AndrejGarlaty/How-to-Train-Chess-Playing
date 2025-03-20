@@ -40,6 +40,7 @@ public class StockfishActivity extends BaseActivity {
     private StockfishManager stockfishManager;
     private boolean isPlayerTurn = true;
     private boolean isGameActive = false;
+    private int chessEngineDifficulty;
 
     private int selectedRow = -1;
     private int selectedCol = -1;
@@ -63,6 +64,7 @@ public class StockfishActivity extends BaseActivity {
         chessGame = new ChessGame();
         setupBoard();
         stockfishManager = new StockfishManager(this);
+        chessEngineDifficulty = getIntent().getIntExtra("difficulty", 10);
         initializeEngine();
 
         resetButton.setOnClickListener(v -> resetGame());
@@ -148,7 +150,7 @@ public class StockfishActivity extends BaseActivity {
     }
 
     private void initializeEngine() {
-        stockfishManager.initialize(new StockfishManager.InitCallback() {
+        stockfishManager.initialize(chessEngineDifficulty ,new StockfishManager.InitCallback() {
             @Override
             public void onSuccess() {
                 runOnUiThread(() -> Log.i(TAG, getBaseContext().getString(R.string.engine_ready)));

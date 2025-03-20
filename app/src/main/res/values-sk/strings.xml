@@ -24,4 +24,9 @@
     <string name="invalid_move">Nepovolený ťah.</string>
     <string name="permission_denied">Práva zamietnuté - nemožno použiť rozpoznávač reči</string>
     <string name="speak">Hovorte</string>
+    <string name="difficulty">Obtiažnosť</string>
+    <string name="cancel">Zrušiť</string>
+    <string name="play">Hrať</string>
+    <string name="difficulty_10">Obtiažnosť: 10</string>
+    <string name="select_difficulty">Zvoľte obtiažnosť</string>
 </resources>
