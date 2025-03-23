@@ -29,4 +29,8 @@
     <string name="play">Hrať</string>
     <string name="difficulty_10">Obtiažnosť: 10</string>
     <string name="select_difficulty">Zvoľte obtiažnosť</string>
+    <string name="voiceInputOption">Spôsob zadávania hlasových povelov</string>
+    <string name="push_to_talk">Push-to-Talk</string>
+    <string name="continuous">Priebežný</string>
+    <string name="none">Žiadny</string>
 </resources>

@@ -28,4 +28,8 @@
     <string name="play">Play</string>
     <string name="difficulty_10">Difficulty: 10</string>
     <string name="select_difficulty">Select Difficulty</string>
+    <string name="voiceInputOption">Method of entering voice commands</string>
+    <string name="push_to_talk">Push to Talk</string>
+    <string name="continuous">Continuous</string>
+    <string name="none">None</string>
 </resources>

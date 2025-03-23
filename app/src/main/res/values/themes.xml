@@ -3,7 +3,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryContainer">@color/colorPrimaryDark</item>
         <item name="colorOnPrimary">@color/white</item>
-
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="colorSurface">@color/colorPrimary</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="colorSurfaceVariant">@color/colorPrimary</item>

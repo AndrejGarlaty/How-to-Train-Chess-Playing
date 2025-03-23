@@ -2,6 +2,7 @@ package com.example.thechesslearninggame;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class StockfishActivity extends BaseActivity {
     private Button resetButton;
     private Button voiceButton;
     private Language language;
+    private VoiceInput voiceInput;
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 191;
     private VoiceOutputManager voiceOutputManager;
@@ -52,9 +54,7 @@ public class StockfishActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stockfish);
 
-        String lang = this.getSharedPreferences("AppSettings", MODE_PRIVATE)
-                .getString("selected_language", Locale.getDefault().getLanguage());
-        language = lang.equals(Language.SLOVAK.getCode()) ? Language.SLOVAK : Language.ENGLISH;
+        setPreferences();
 
         turnIndicator = findViewById(R.id.turnIndicator);
         resetButton = findViewById(R.id.resetButton);
@@ -75,48 +75,59 @@ public class StockfishActivity extends BaseActivity {
         });
 
         voiceOutputManager = new VoiceOutputManager(this);
-        voiceOutputManager.setOnTtsCompleteListener(
-                () -> new Handler(Looper.getMainLooper()).postDelayed(
-                        this::startListening, 0));
 
-        voiceInputManager = new VoiceInputManager(this, new VoiceInputManager.VoiceInputCallback() {
-            @Override
-            public void onVoiceInputResult(String text) {
-                Toast.makeText(StockfishActivity.this, text, Toast.LENGTH_SHORT).show();
-                voiceButton.setText(R.string.voice_button);
-                voiceButton.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
-                String uciMove = ChessMoveParser.parseToUCI(text, chessGame);
-                if (uciMove != null) {
-                    applyEngineMove(uciMove);
-                    onPlayerMoveMade();
-                } else {
-                    String msg = getMessage();
-                    Toast.makeText(StockfishActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    voiceOutputManager.speak(msg);
-                }
+        if (!voiceInput.equals(VoiceInput.NONE)) {
+            if (voiceInput.equals(VoiceInput.CONTINOUS)) {
+                voiceOutputManager.setOnTtsCompleteListener(
+                        () -> new Handler(Looper.getMainLooper()).postDelayed(
+                                this::startListening, 0));
             }
-            @Override
-            public void onVoiceInputError(String error, int errorCode) {
-                if (errorCode==7) { //restart listening due to timeout
+
+            voiceInputManager = new VoiceInputManager(this, new VoiceInputManager.VoiceInputCallback() {
+                @Override
+                public void onVoiceInputResult(String text) {
+                    Toast.makeText(StockfishActivity.this, text, Toast.LENGTH_SHORT).show();
+                    voiceButton.setText(R.string.voice_button);
+                    voiceButton.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
+                    String uciMove = ChessMoveParser.parseToUCI(text, chessGame);
+                    if (uciMove != null) {
+                        applyEngineMove(uciMove);
+                        onPlayerMoveMade();
+                    } else {
+                        String msg = getMessage();
+                        Toast.makeText(StockfishActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        voiceOutputManager.speak(msg);
+                    }
+                }
+                @Override
+                public void onVoiceInputError(String error, int errorCode) {
+                    if (voiceInput.equals(VoiceInput.CONTINOUS)) {
+                        if (errorCode==7) { //restart listening due to timeout
+                            startListening();
+                            return;
+                        }
+                    }
+                     if (errorCode==8) { //recognition busy
+                        stopListening();
+                    } else {
+                        Toast.makeText(StockfishActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            voiceButton.setOnClickListener(v -> {
+                if (ContextCompat.checkSelfPermission(StockfishActivity.this,
+                        android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                     startListening();
-                } else if (errorCode==8) { //recognition busy
-                    stopListening();
                 } else {
-                    Toast.makeText(StockfishActivity.this, error, Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(StockfishActivity.this,
+                            new String[]{Manifest.permission.RECORD_AUDIO},
+                            REQUEST_RECORD_AUDIO_PERMISSION);
                 }
-            }
-        });
-
-        voiceButton.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(StockfishActivity.this,
-                    Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                startListening();
-            } else {
-                ActivityCompat.requestPermissions(StockfishActivity.this,
-                        new String[]{Manifest.permission.RECORD_AUDIO},
-                        REQUEST_RECORD_AUDIO_PERMISSION);
-            }
-        });
+            });
+        } else {
+            voiceButton.setVisibility(TextView.GONE);
+        }
     }
 
     private String getMessage() {
@@ -124,10 +135,12 @@ public class StockfishActivity extends BaseActivity {
     }
 
     private void startListening() {
-        voiceInputManager.startListening();
-        startProgressBarAnimation();
-        voiceButton.setText(R.string.speak);
-        voiceButton.setBackgroundColor(ContextCompat.getColor(this, R.color.voiceBtnActive));
+        if (!chessGame.isCheckmate()) {
+            voiceInputManager.startListening();
+            startProgressBarAnimation();
+            voiceButton.setText(R.string.speak);
+            voiceButton.setBackgroundColor(ContextCompat.getColor(this, R.color.voiceBtnActive));
+        }
     }
 
     private void stopListening() {
@@ -273,6 +286,7 @@ public class StockfishActivity extends BaseActivity {
             } else {
                 turnIndicator.setText(R.string.game_over_white_wins);
             }
+            voiceInputManager.stopListening();
         } //todo draw?
     }
 
@@ -281,7 +295,9 @@ public class StockfishActivity extends BaseActivity {
         super.onDestroy();
         stockfishManager.shutdown();
         Log.i(TAG, "onDestroy: engine shut down");
-        voiceInputManager.destroy();
+        if (voiceInputManager != null) {
+            voiceInputManager.destroy();
+        }
         voiceOutputManager.shutdown();
     }
 
@@ -351,4 +367,11 @@ public class StockfishActivity extends BaseActivity {
         }
     }
 
+    private void setPreferences() {
+        SharedPreferences preferences = this.getSharedPreferences(Preferences.NAME.getValue(), MODE_PRIVATE);
+        String lang = preferences.getString(Preferences.LANGUAGE.getValue(), Locale.getDefault().getLanguage());
+        language = lang.equals(Language.SLOVAK.getCode()) ? Language.SLOVAK : Language.ENGLISH;
+        String vi = preferences.getString(Preferences.VOICE_INPUT.getValue(), VoiceInput.NONE.name());
+        voiceInput = VoiceInput.valueOf(vi);
+    }
 }
