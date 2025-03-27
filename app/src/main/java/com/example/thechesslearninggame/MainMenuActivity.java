@@ -62,7 +62,7 @@ public class MainMenuActivity extends BaseActivity {
         MaterialButton btnPlay = dialogView.findViewById(R.id.btnPlay);
 
         slider.addOnChangeListener((slider1, value, fromUser) -> {
-            String diffValue = getString(R.string.difficulty) + (int) value;
+            String diffValue = getString(R.string.difficulty) + " " + (int) value;
             tvDifficultyValue.setText(diffValue);
                 }
         );

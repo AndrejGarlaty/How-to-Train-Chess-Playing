@@ -8,9 +8,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +20,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,7 @@ public class StockfishActivity extends BaseActivity {
     private ChessSquareAdapter adapter;
     private ChessGame chessGame;
     private TextView turnIndicator;
-    private Button resetButton;
+    private ImageButton helpButton;
     private Button voiceButton;
     private Language language;
     private VoiceInput voiceInput;
@@ -57,7 +61,7 @@ public class StockfishActivity extends BaseActivity {
         setPreferences();
 
         turnIndicator = findViewById(R.id.turnIndicator);
-        resetButton = findViewById(R.id.resetButton);
+        helpButton = findViewById(R.id.btn_help);
         chessboard = findViewById(R.id.chessboard);
         voiceButton = findViewById(R.id.voiceButton);
 
@@ -67,7 +71,7 @@ public class StockfishActivity extends BaseActivity {
         chessEngineDifficulty = getIntent().getIntExtra("difficulty", 10);
         initializeEngine();
 
-        resetButton.setOnClickListener(v -> resetGame());
+        helpButton.setOnClickListener(v -> showHelpDialog());
         chessboard.setOnItemClickListener((parent, view, position, id) -> {
             int row = position / 8;
             int col = position % 8;
@@ -374,4 +378,13 @@ public class StockfishActivity extends BaseActivity {
         String vi = preferences.getString(Preferences.VOICE_INPUT.getValue(), VoiceInput.NONE.name());
         voiceInput = VoiceInput.valueOf(vi);
     }
+
+    private void showHelpDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Help")
+                .setMessage(Html.fromHtml(getString(R.string.help_dialog_message), Html.FROM_HTML_MODE_LEGACY)) // Long help text in strings.xml
+                .setPositiveButton("Got it!", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
 }

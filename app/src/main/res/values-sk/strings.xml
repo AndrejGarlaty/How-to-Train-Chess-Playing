@@ -33,4 +33,20 @@
     <string name="push_to_talk">Push-to-Talk</string>
     <string name="continuous">Priebežný</string>
     <string name="none">Žiadny</string>
+    <string name="help_dialog_message">
+        <![CDATA[<p>
+        1. Move your pieces by tapping on them.</p>
+        2. The game highlights all possible moves.
+        3. Use the hint button if you are stuck.
+        4. Your clock is ticking - plan quickly!
+        5. Long press on a piece for more options.
+        6. You can undo your move if needed.
+        7. The app saves your game automatically.
+        8. Check the settings for voice input options.
+        9. Customize your board in the settings.
+        10. Tap on the clock to pause the game.
+        11. Learn chess strategies in the tutorial.
+        <p>12. Enjoy and have fun playing!</p>
+        ]]>
+    </string>
 </resources>
