@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.modules;
 
 import java.util.Arrays;
 

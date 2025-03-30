@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.thechesslearninggame.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;

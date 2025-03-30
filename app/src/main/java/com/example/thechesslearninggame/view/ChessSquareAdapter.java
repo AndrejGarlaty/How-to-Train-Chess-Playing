@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.view;
 
 import android.content.Context;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+
+import com.example.thechesslearninggame.R;
 
 import java.util.ArrayList;
 import java.util.List;

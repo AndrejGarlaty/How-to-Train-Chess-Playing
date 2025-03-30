@@ -15,7 +15,7 @@
         android:extractNativeLibs="true"
         tools:targetApi="31">
         <activity
-            android:name=".MainMenuActivity"
+            android:name=".view.MainMenuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -24,9 +24,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ChessActivity"/>
-        <activity android:name=".StockfishActivity"/>
-        <activity android:name=".SettingsActivity"/>
+        <activity android:name=".view.ChessActivity"/>
+        <activity android:name=".view.StockfishActivity"/>
+        <activity android:name=".view.SettingsActivity"/>
     </application>
 
 </manifest>

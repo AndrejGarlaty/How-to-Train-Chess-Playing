@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.modules;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -9,6 +9,9 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.thechesslearninggame.utils.enums.Language;
+import com.example.thechesslearninggame.R;
 
 import java.util.ArrayList;
 import java.util.Locale;

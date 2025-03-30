@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.utils.enums;
 
 public enum Preferences {
 

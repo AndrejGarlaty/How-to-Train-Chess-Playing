@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.modules;
 
 import static android.content.Context.MODE_PRIVATE;
 

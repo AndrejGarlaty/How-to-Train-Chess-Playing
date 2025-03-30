@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.view;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
@@ -21,6 +21,15 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.thechesslearninggame.modules.ChessGame;
+import com.example.thechesslearninggame.modules.ChessMoveParser;
+import com.example.thechesslearninggame.utils.enums.Language;
+import com.example.thechesslearninggame.utils.enums.Preferences;
+import com.example.thechesslearninggame.R;
+import com.example.thechesslearninggame.modules.StockfishManager;
+import com.example.thechesslearninggame.utils.enums.VoiceInput;
+import com.example.thechesslearninggame.modules.VoiceInputManager;
+import com.example.thechesslearninggame.modules.VoiceOutputManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;

@@ -1,10 +1,13 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.view;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+
+import com.example.thechesslearninggame.modules.ChessGame;
+import com.example.thechesslearninggame.R;
 
 import java.util.ArrayList;
 import java.util.List;

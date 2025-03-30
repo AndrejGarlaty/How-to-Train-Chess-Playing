@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.view;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -6,6 +6,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+
+import com.example.thechesslearninggame.utils.enums.Language;
+import com.example.thechesslearninggame.utils.enums.Preferences;
+import com.example.thechesslearninggame.R;
+import com.example.thechesslearninggame.utils.enums.VoiceInput;
+
 import java.util.Locale;
 
 public class SettingsActivity extends BaseActivity {
