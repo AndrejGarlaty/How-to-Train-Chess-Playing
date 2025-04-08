@@ -26,7 +26,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class StockfishActivity extends BaseActivity {
     private final String TAG = "StockfishActivity";
@@ -111,6 +110,9 @@ public class StockfishActivity extends BaseActivity {
                             startListening();
                             return;
                         }
+                    } else if (voiceInput.equals(VoiceInput.PUSH_TO_TALK)) {
+                        voiceButton.setText(R.string.voice_button);
+                        voiceButton.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
                     }
                      if (errorCode==8) { //recognition busy
                         stopListening();
@@ -376,7 +378,7 @@ public class StockfishActivity extends BaseActivity {
 
     private void setPreferences() {
         SharedPreferences preferences = this.getSharedPreferences(Preferences.NAME.getValue(), MODE_PRIVATE);
-        String lang = preferences.getString(Preferences.LANGUAGE.getValue(), Locale.getDefault().getLanguage());
+        String lang = preferences.getString(Preferences.LANGUAGE.getValue(), Language.ENGLISH.getCode());
         language = lang.equals(Language.SLOVAK.getCode()) ? Language.SLOVAK : Language.ENGLISH;
         String vi = preferences.getString(Preferences.VOICE_INPUT.getValue(), VoiceInput.NONE.name());
         voiceInput = VoiceInput.valueOf(vi);

@@ -13,7 +13,18 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(Preferences.NAME.getValue(), Context.MODE_PRIVATE);
-        String languageCode = prefs.getString(Preferences.LANGUAGE.getValue(), Locale.getDefault().getLanguage());
+        String languageCode = prefs.getString(Preferences.LANGUAGE.getValue(), null);
+        if (languageCode==null) {
+            SharedPreferences.Editor editor = prefs.edit();
+
+            if (Locale.getDefault().getLanguage().equals(Language.SLOVAK.getCode())) {
+                languageCode = Language.SLOVAK.getCode();
+            } else {
+                languageCode = Language.ENGLISH.getCode();
+            }
+            editor.putString(Preferences.LANGUAGE.getValue(), languageCode);
+            editor.apply();
+        }
         Locale newLocale = new Locale(languageCode);
         Locale.setDefault(newLocale);
         Configuration configuration = context.getResources().getConfiguration();

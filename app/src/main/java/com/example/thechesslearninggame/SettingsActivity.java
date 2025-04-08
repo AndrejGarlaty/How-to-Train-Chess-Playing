@@ -6,7 +6,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import java.util.Locale;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -24,7 +23,7 @@ public class SettingsActivity extends BaseActivity {
         spinnerLanguage.setAdapter(adapter);
 
         SharedPreferences prefs = getSharedPreferences(Preferences.NAME.getValue(), MODE_PRIVATE);
-        spinnerLanguage.setSelection(prefs.getString(Preferences.LANGUAGE.getValue(), Locale.getDefault().getLanguage()).equals(Language.SLOVAK.getCode()) ? 0 : 1);
+        spinnerLanguage.setSelection(prefs.getString(Preferences.LANGUAGE.getValue(), Language.ENGLISH.getCode()).equals(Language.SLOVAK.getCode()) ? 0 : 1);
 
         RadioGroup radioGroup = findViewById(R.id.rg_voice_input);
         String savedMode = prefs.getString(Preferences.VOICE_INPUT.getValue(), VoiceInput.NONE.name());

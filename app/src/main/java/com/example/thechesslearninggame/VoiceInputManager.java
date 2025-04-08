@@ -11,7 +11,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class VoiceInputManager {
 
@@ -31,8 +30,8 @@ public class VoiceInputManager {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
         speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        String languageValue = context.getSharedPreferences("AppSettings", MODE_PRIVATE)
-                .getString("selected_language", Locale.getDefault().getLanguage()).equals(Language.SLOVAK.getCode()) ? "sk-SK" : "en-US";
+        String languageValue = context.getSharedPreferences(Preferences.NAME.getValue(), MODE_PRIVATE)
+                .getString(Preferences.LANGUAGE.getValue(), Language.ENGLISH.getCode()).equals(Language.SLOVAK.getCode()) ? "sk-SK" : "en-US";
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageValue);
 
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
