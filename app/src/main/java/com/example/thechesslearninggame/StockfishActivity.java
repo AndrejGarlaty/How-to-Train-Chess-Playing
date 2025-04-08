@@ -97,6 +97,7 @@ public class StockfishActivity extends BaseActivity {
                     if (uciMove != null) {
                         applyEngineMove(uciMove);
                         onPlayerMoveMade();
+                        clearSelection();
                     } else {
                         String msg = getMessage();
                         Toast.makeText(StockfishActivity.this, msg, Toast.LENGTH_SHORT).show();
