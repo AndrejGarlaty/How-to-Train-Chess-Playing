@@ -24,29 +24,22 @@
     <string name="invalid_move">Nepovolený ťah.</string>
     <string name="permission_denied">Práva zamietnuté - nemožno použiť rozpoznávač reči</string>
     <string name="speak">Hovorte</string>
-    <string name="difficulty">Obtiažnosť</string>
+    <string name="difficulty">Obťažnosť</string>
     <string name="cancel">Zrušiť</string>
     <string name="play">Hrať</string>
-    <string name="difficulty_10">Obtiažnosť: 10</string>
-    <string name="select_difficulty">Zvoľte obtiažnosť</string>
+    <string name="difficulty_10">Obťažnosť: 10</string>
+    <string name="select_difficulty">Zvoľte obťažnosť</string>
     <string name="voiceInputOption">Spôsob zadávania hlasových povelov</string>
     <string name="push_to_talk">Push-to-Talk</string>
-    <string name="continuous">Priebežný</string>
+    <string name="continuous">Nepretržitý</string>
     <string name="none">Žiadny</string>
     <string name="help_dialog_message">
-        <![CDATA[<p>
-        1. Move your pieces by tapping on them.</p>
-        2. The game highlights all possible moves.
-        3. Use the hint button if you are stuck.
-        4. Your clock is ticking - plan quickly!
-        5. Long press on a piece for more options.
-        6. You can undo your move if needed.
-        7. The app saves your game automatically.
-        8. Check the settings for voice input options.
-        9. Customize your board in the settings.
-        10. Tap on the clock to pause the game.
-        11. Learn chess strategies in the tutorial.
-        <p>12. Enjoy and have fun playing!</p>
+        <![CDATA[
+        <p> Stlačte tlačidlo a zadajte povel v nasledujúcej podobe:</p>
+        Pešiak na E4<br>E4 (iba v prípade pešiakov)<br>Pešiak berie strelca na E4<br>E3 E4
+        <p>Ak máte stále problém zadať ťah, snažte sa hovoriť pomalšie a dôraznejšie.</p>
         ]]>
     </string>
+    <string name="helpTitle">Ako používať hlasové povely</string>
+    <string name="help_positive_button">Jasné!</string>
 </resources>

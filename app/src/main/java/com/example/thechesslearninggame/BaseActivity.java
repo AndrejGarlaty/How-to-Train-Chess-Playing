@@ -12,8 +12,8 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("AppSettings", Context.MODE_PRIVATE);
-        String languageCode = prefs.getString("selected_language", Locale.getDefault().getLanguage());
+        SharedPreferences prefs = context.getSharedPreferences(Preferences.NAME.getValue(), Context.MODE_PRIVATE);
+        String languageCode = prefs.getString(Preferences.LANGUAGE.getValue(), Locale.getDefault().getLanguage());
         Locale newLocale = new Locale(languageCode);
         Locale.setDefault(newLocale);
         Configuration configuration = context.getResources().getConfiguration();

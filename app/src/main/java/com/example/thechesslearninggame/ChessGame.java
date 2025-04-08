@@ -37,11 +37,9 @@ public class ChessGame {
         if (piece.isEmpty()) return false;
         if (isWhiteTurn != Character.isUpperCase(piece.charAt(0))) return false;
 
-        // Prevent capturing your own pieces or the opponent's king
         String targetPiece = board[toRow][toCol];
         if (!targetPiece.isEmpty()) {
             if (Character.isUpperCase(targetPiece.charAt(0)) == isWhiteTurn) return false;
-            //if (targetPiece.equalsIgnoreCase("K")) return false;
         }
 
         // Validate piece movement

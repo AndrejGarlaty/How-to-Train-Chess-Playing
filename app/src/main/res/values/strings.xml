@@ -34,18 +34,11 @@
     <string name="none">None</string>
     <string name="help_dialog_message">
         <![CDATA[
-        1. Move your pieces by tapping on them.
-        2. The game highlights all possible moves.
-        3. Use the hint button if you are stuck.
-        4. Your clock is ticking - plan quickly!
-        5. Long press on a piece for more options.
-        6. You can undo your move if needed.
-        7. The app saves your game automatically.
-        8. Check the settings for voice input options.
-        9. Customize your board in the settings.
-        10. Tap on the clock to pause the game.
-        11. Learn chess strategies in the tutorial.
-        12. Enjoy and have fun playing!
+        <p> Press the button and give a command in the following format:</p>
+        Pawn to E4<br>E4 (only in the case of pawns)<br>Pawn captures bishop on E4<br>E3 E4
+        <p>If you are still having trouble issuing the move, try speaking more slowly and clearly.</p>
         ]]>
     </string>
+    <string name="helpTitle">Help</string>
+    <string name="help_positive_button">Got it!</string>
 </resources>

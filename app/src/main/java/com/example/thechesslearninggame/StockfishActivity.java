@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -290,7 +291,9 @@ public class StockfishActivity extends BaseActivity {
             } else {
                 turnIndicator.setText(R.string.game_over_white_wins);
             }
-            voiceInputManager.stopListening();
+            if (voiceInputManager!=null) {
+                voiceInputManager.stopListening();
+            }
         } //todo draw?
     }
 
@@ -380,11 +383,13 @@ public class StockfishActivity extends BaseActivity {
     }
 
     private void showHelpDialog() {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle("Help")
+        AlertDialog alertDialog =  new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.helpTitle)
                 .setMessage(Html.fromHtml(getString(R.string.help_dialog_message), Html.FROM_HTML_MODE_LEGACY)) // Long help text in strings.xml
-                .setPositiveButton("Got it!", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(R.string.help_positive_button, (dialog, which) -> dialog.dismiss())
                 .show();
+        Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setTextColor(ContextCompat.getColor(this, R.color.white));
     }
 
 }

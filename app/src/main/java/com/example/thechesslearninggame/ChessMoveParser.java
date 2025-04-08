@@ -23,13 +23,13 @@ public class ChessMoveParser {
                         "(?:to|na)?\\s*([a-hA-H])\\s*([1-8])" +
                         "|" +
                         // veža berie koňa na D5
-                        "(?:(knight|jazdec|kôň|bishop|strelec|rook|veža|queen|dáma|kráľovná|king|kráľ|pawn|pešiak)\\s+)" +
+                        "(knight|jazdec|kôň|bishop|strelec|rook|veža|queen|dáma|kráľovná|king|kráľ|pawn|pešiak)\\s+" +
                         "(?:takes|berie)\\s+" +
                         "(?:(knight|jazdca|koňa|bishop|strelca|rook|vežu|queen|dámu|kráľovnú|king|kráľa|krála|pawn|pešiaka)\\s+)?" +
                         "(?:to|na|on)?\\s*([a-hA-H])\\s*([1-8])" +
                         "|" +
                         // pešiak E4
-                        "(?:(knight|jazdec|kôň|bishop|strelec|rook|veža|queen|dáma|kráľovná|king|kráľ|pawn|pešiak))\\s*([a-hA-H])\\s*([1-8])" +
+                        "(knight|jazdec|kôň|bishop|strelec|rook|veža|queen|dáma|kráľovná|king|kráľ|pawn|pešiak)\\s*([a-hA-H])\\s*([1-8])" +
                         "|" +
                         // D1 D3
                         "([a-hA-H])\\s*([1-8])\\s+([a-hA-H])\\s*([1-8])" +
