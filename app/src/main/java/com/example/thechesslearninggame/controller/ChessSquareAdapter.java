@@ -15,14 +15,14 @@ import com.example.thechesslearninggame.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SquareAdapter extends BaseAdapter {
+public class ChessSquareAdapter extends BaseAdapter {
     private final List<Integer> colors;
     private final Context context;
     private String[][] chessBoardState;
     private List<Integer> validMoves;
     private List<Integer> checkRed = new ArrayList<>();
 
-    public SquareAdapter(Context context, List<Integer> colors, String[][] chessBoardState, List<Integer> validMoves) {
+    public ChessSquareAdapter(Context context, List<Integer> colors, String[][] chessBoardState, List<Integer> validMoves) {
         this.context = context;
         this.colors = colors;
         this.chessBoardState = chessBoardState;

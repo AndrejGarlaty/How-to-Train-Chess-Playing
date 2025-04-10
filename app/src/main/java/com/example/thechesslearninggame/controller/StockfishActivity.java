@@ -39,7 +39,7 @@ import java.util.List;
 public class StockfishActivity extends BaseActivity {
     private final String TAG = "StockfishActivity";
     private GridView chessboard;
-    private SquareAdapter adapter;
+    private ChessSquareAdapter adapter;
     private ChessGame chessGame;
     private TextView turnIndicator;
     private Button voiceButton;
@@ -209,7 +209,7 @@ public class StockfishActivity extends BaseActivity {
                 colors.add(getSquareColor(row, col));
             }
         }
-        adapter = new SquareAdapter(this, colors, chessGame.getBoard(), validMoves);
+        adapter = new ChessSquareAdapter(this, colors, chessGame.getBoard(), validMoves);
         chessboard.setAdapter(adapter);
         updateGameStatus();
     }
