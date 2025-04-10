@@ -37,7 +37,7 @@ public class ChessMoveParser {
         ).matcher(cleanedText);
 
         if (!movematcher.find()) {
-            return null; // No valid move pattern
+            return null;
         }
 
         String pieceName = null;
@@ -102,15 +102,10 @@ public class ChessMoveParser {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 String piece = chessGame.getBoard()[row][col];
-                if (piece.isEmpty())  {
-                    continue;
-                }
-                if (!pieceAbbreviation.isEmpty() && !piece.equalsIgnoreCase(pieceAbbreviation)) {
-                    continue;
-                }
-                if (pieceAbbreviation.isEmpty() && !piece.equalsIgnoreCase("P") && !piece.equalsIgnoreCase("p")) {
-                    continue;
-                }
+                if (piece.isEmpty()) continue;
+                if (!pieceAbbreviation.isEmpty() && !piece.equalsIgnoreCase(pieceAbbreviation)) continue;
+                if (pieceAbbreviation.isEmpty() && !piece.equalsIgnoreCase("P") &&
+                        !piece.equalsIgnoreCase("p")) continue;
                 int destRow = 8 - Character.getNumericValue(targetSquare.charAt(1));
                 int destCol = targetSquare.charAt(0) - 'a';
 

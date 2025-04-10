@@ -24,7 +24,6 @@ import androidx.core.content.ContextCompat;
 
 import com.example.thechesslearninggame.model.ChessGame;
 import com.example.thechesslearninggame.model.ChessMoveParser;
-import com.example.thechesslearninggame.model.ChessSquareAdapter;
 import com.example.thechesslearninggame.model.enums.Language;
 import com.example.thechesslearninggame.model.enums.Preferences;
 import com.example.thechesslearninggame.R;
@@ -40,10 +39,9 @@ import java.util.List;
 public class StockfishActivity extends BaseActivity {
     private final String TAG = "StockfishActivity";
     private GridView chessboard;
-    private ChessSquareAdapter adapter;
+    private SquareAdapter adapter;
     private ChessGame chessGame;
     private TextView turnIndicator;
-    private ImageButton helpButton;
     private Button voiceButton;
     private Language language;
     private VoiceInput voiceInput;
@@ -71,7 +69,7 @@ public class StockfishActivity extends BaseActivity {
         setPreferences();
 
         turnIndicator = findViewById(R.id.turnIndicator);
-        helpButton = findViewById(R.id.btn_help);
+        ImageButton helpButton = findViewById(R.id.btn_help);
         chessboard = findViewById(R.id.chessboard);
         voiceButton = findViewById(R.id.voiceButton);
 
@@ -211,7 +209,7 @@ public class StockfishActivity extends BaseActivity {
                 colors.add(getSquareColor(row, col));
             }
         }
-        adapter = new ChessSquareAdapter(this, colors, chessGame.getBoard(), validMoves);
+        adapter = new SquareAdapter(this, colors, chessGame.getBoard(), validMoves);
         chessboard.setAdapter(adapter);
         updateGameStatus();
     }

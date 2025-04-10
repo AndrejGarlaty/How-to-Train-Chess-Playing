@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame.model;
+package com.example.thechesslearninggame.controller;
 
 import android.content.Context;
 import android.view.View;
@@ -15,14 +15,14 @@ import com.example.thechesslearninggame.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChessSquareAdapter extends BaseAdapter {
+public class SquareAdapter extends BaseAdapter {
     private final List<Integer> colors;
     private final Context context;
     private String[][] chessBoardState;
     private List<Integer> validMoves;
     private List<Integer> checkRed = new ArrayList<>();
 
-    public ChessSquareAdapter(Context context, List<Integer> colors, String[][] chessBoardState, List<Integer> validMoves) {
+    public SquareAdapter(Context context, List<Integer> colors, String[][] chessBoardState, List<Integer> validMoves) {
         this.context = context;
         this.colors = colors;
         this.chessBoardState = chessBoardState;
@@ -62,13 +62,13 @@ public class ChessSquareAdapter extends BaseAdapter {
         TextView coordBottom = view.findViewById(R.id.coord_bottom);
 
         if (col == 7) {
-            coordLeft.setText(String.valueOf(8 - row)); // 8 for row 0, 1 for row 7
+            coordLeft.setText(String.valueOf(8 - row));
             coordLeft.setVisibility(View.VISIBLE);
         } else {
             coordLeft.setVisibility(View.GONE);
         }
         if (row == 7) {
-            coordBottom.setText(String.valueOf((char) ('a' + col))); // a-h
+            coordBottom.setText(String.valueOf((char) ('a' + col)));
             coordBottom.setVisibility(View.VISIBLE);
         } else {
             coordBottom.setVisibility(View.GONE);

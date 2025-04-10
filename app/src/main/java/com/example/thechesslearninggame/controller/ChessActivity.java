@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat;
 
 import com.example.thechesslearninggame.model.ChessGame;
 import com.example.thechesslearninggame.model.ChessMoveParser;
-import com.example.thechesslearninggame.model.ChessSquareAdapter;
 import com.example.thechesslearninggame.model.enums.Preferences;
 import com.example.thechesslearninggame.R;
 import com.example.thechesslearninggame.model.enums.VoiceInput;
@@ -35,7 +34,7 @@ import java.util.List;
 public class ChessActivity extends BaseActivity {
     private final String TAG = "ChessActivity";
     private GridView chessboard;
-    private ChessSquareAdapter adapter;
+    private SquareAdapter adapter;
     private ChessGame chessGame;
     private TextView turnIndicator;
     private Button voiceButton;
@@ -163,7 +162,7 @@ public class ChessActivity extends BaseActivity {
                 colors.add(getSquareColor(row, col));
             }
         }
-        adapter = new ChessSquareAdapter(this, colors, chessGame.getBoard(), validMoves);
+        adapter = new SquareAdapter(this, colors, chessGame.getBoard(), validMoves);
         chessboard.setAdapter(adapter);
         updateGameStatus();
     }

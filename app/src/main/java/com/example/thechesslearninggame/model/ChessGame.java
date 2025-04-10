@@ -42,7 +42,6 @@ public class ChessGame {
             if (Character.isUpperCase(targetPiece.charAt(0)) == isWhiteTurn) return false;
         }
 
-        // Validate piece movement
         boolean isValid = switch (piece.toUpperCase()) {
             case "P" -> validatePawnMove(fromRow, fromCol, toRow, toCol);
             case "R" -> validateRookMove(fromRow, fromCol, toRow, toCol);
@@ -53,13 +52,11 @@ public class ChessGame {
             default -> false;
         };
 
-        // If the move is valid, check if it resolves the check
         if (isValid) {
             String[][] tempBoard = copyBoard();
             tempBoard[toRow][toCol] = tempBoard[fromRow][fromCol];
             tempBoard[fromRow][fromCol] = "";
 
-            // Get the king's position in the simulated board
             int kingRow = isWhiteTurn ? whiteKingRow : blackKingRow;
             int kingCol = isWhiteTurn ? whiteKingCol : blackKingCol;
             if (piece.equalsIgnoreCase("K")) {
@@ -67,23 +64,14 @@ public class ChessGame {
                 kingCol = toCol;
             }
 
-            // Handle en passant capture in the simulation
             if (piece.equalsIgnoreCase("P") && toRow == enPassantSquare[0] && toCol == enPassantSquare[1]) {
-                // Remove the captured pawn
                 int capturedPawnRow = isWhiteTurn ? toRow + 1 : toRow - 1;
                 tempBoard[capturedPawnRow][toCol] = "";
             }
 
-            // Check if the king is still under attack using the TEMP board
             boolean isStillInCheck = isSquareUnderAttack(kingRow, kingCol, tempBoard, !isWhiteTurn);
 
-            // If the player was in check, the move must resolve it
-            if ((isWhiteTurn && whiteInCheck) || (!isWhiteTurn && blackInCheck)) {
-                isValid = !isStillInCheck;
-            } else {
-                // If not in check, the move must not put the king in check
-                isValid = !isStillInCheck;
-            }
+            isValid = !isStillInCheck;
         }
 
         return isValid;
@@ -105,8 +93,7 @@ public class ChessGame {
     private boolean validatePawnMove(int fromRow, int fromCol, int toRow, int toCol) {
         int direction = isWhiteTurn ? -1 : 1;
         int startRow = isWhiteTurn ? 6 : 1;
-
-        // Basic forward move (one step)
+        //basic move
         if (fromCol == toCol && board[toRow][toCol].isEmpty()) {
             if (toRow == fromRow + direction) return true;
             if (fromRow == startRow && toRow == fromRow + 2 * direction && board[fromRow + direction][toCol].isEmpty()) {
@@ -114,27 +101,22 @@ public class ChessGame {
                 return true;
             }
         }
-
-        // Capture (diagonal move)
+        //capture
         if (Math.abs(toCol - fromCol) == 1 && toRow == fromRow + direction) {
             if (!board[toRow][toCol].isEmpty()) {
                 return true;
             }
-            // En Passant check
+            //en passant
             return enPassantSquare != null && toRow == enPassantSquare[0] && toCol == enPassantSquare[1] &&
                     board[fromRow][toCol].equals(isWhiteTurn ? "p" : "P");
         }
-
         return false;
     }
 
     private boolean validateKingMove(int fromRow, int fromCol, int toRow, int toCol) {
-        // Regular king move
         if (Math.abs(toRow - fromRow) <= 1 && Math.abs(toCol - fromCol) <= 1) {
             return true;
         }
-
-        // Castling
         if (fromRow == toRow && Math.abs(toCol - fromCol) == 2) {
             return validateCastling(fromRow, fromCol, toCol);
         }
@@ -145,17 +127,13 @@ public class ChessGame {
         boolean isWhite = isWhiteTurn;
         boolean kingside = (toCol == 6);
 
-        // Check castling rights
         if (isWhite) {
             if ((kingside && !whiteCastleKingside) || (!kingside && !whiteCastleQueenside)) return false;
         } else {
             if ((kingside && !blackCastleKingside) || (!kingside && !blackCastleQueenside)) return false;
         }
 
-        // Check if king is currently in check
         if (isWhite ? whiteInCheck : blackInCheck) return false;
-
-        // Check path is clear
         int colStep = kingside ? 1 : -1;
         int currentCol = fromCol + colStep;
         while (currentCol != (kingside ? 7 : 0)) {
@@ -163,13 +141,11 @@ public class ChessGame {
             currentCol += colStep;
         }
 
-        // Check if squares the king moves through are under attack
         currentCol = fromCol;
         for (int i = 0; i < 2; i++) {
             currentCol += colStep;
             if (isSquareUnderAttack(row, currentCol, board, !isWhiteTurn)) return false;
         }
-
         return true;
     }
 
@@ -269,7 +245,7 @@ public class ChessGame {
         board[toRow][toCol] = piece;
         board[fromRow][fromCol] = "";
 
-        // Track state changes for FEN generation
+        //for FEN generation
         boolean wasWhiteTurn = isWhiteTurn;
         String movedPiece = board[fromRow][fromCol];
         String capturedPiece = board[toRow][toCol];
@@ -289,7 +265,6 @@ public class ChessGame {
                 blackCastleQueenside = false;
             }
 
-            // Handle castling
             if (Math.abs(toCol - fromCol) == 2) {
                 int rookFromCol = (toCol == 6) ? 7 : 0;
                 int rookToCol = (toCol == 6) ? 5 : 3;
@@ -308,17 +283,14 @@ public class ChessGame {
             }
         }
 
-        // Handle en passant
         if (piece.equalsIgnoreCase("P") && toRow == enPassantSquare[0] && toCol == enPassantSquare[1]) {
             board[fromRow][toCol] = "";
         }
 
-        // Update en passant target
         enPassantSquare = (piece.equalsIgnoreCase("P") && Math.abs(toRow - fromRow) == 2)
                 ? new int[]{(fromRow + toRow) / 2, fromCol}
                 : new int[]{-1, -1};
 
-        // Handle pawn promotion
         if (piece.equalsIgnoreCase("P") && (toRow == 0 || toRow == 7)) {
             if (isWhiteTurn()) {
                 board[toRow][toCol] = "Q";
@@ -328,21 +300,17 @@ public class ChessGame {
 
         }
 
-        // Update half-move clock
         if (isPawnMove || isCapture) {
             halfMoveClock = 0;
         } else {
             halfMoveClock++;
         }
 
-        // Update full move number after black's move
         if (!wasWhiteTurn) {
             fullMoveNumber++;
         }
-
         updateCheckStatus();
         isWhiteTurn = !isWhiteTurn;
-
     }
 
     private void updateCheckStatus() {
@@ -421,7 +389,7 @@ public class ChessGame {
     private String getEnPassant() {
         if (enPassantSquare[0] == -1) return "-";
         char file = (char) ('a' + enPassantSquare[1]);
-        int rank = 8 - enPassantSquare[0]; // Convert 0-based to 1-based
+        int rank = 8 - enPassantSquare[0];
         return "" + file + rank;
     }
 
