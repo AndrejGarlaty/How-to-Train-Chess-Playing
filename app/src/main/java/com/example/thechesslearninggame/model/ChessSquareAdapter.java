@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.model;
 
 import android.content.Context;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+
+import com.example.thechesslearninggame.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,16 +49,12 @@ public class ChessSquareAdapter extends BaseAdapter {
         View view = convertView;
         if (view == null) {
             view = android.view.LayoutInflater.from(context).inflate(R.layout.square, parent, false);
-
-            // Calculate the size of each square dynamically
+            //na dynamicke zobrazenie pozdlz celeho displeja
             int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-            int squareSize = screenWidth / 8; // Divide the screen width into 8 equal parts
-            // Set the size of the square
+            int squareSize = screenWidth / 8;
             view.setLayoutParams(new GridView.LayoutParams(squareSize, squareSize));
         }
         view.setBackgroundColor(colors.get(position));
-
-        // Calculate row and column from position
         int row = position / 8;
         int col = position % 8;
 
@@ -69,8 +67,6 @@ public class ChessSquareAdapter extends BaseAdapter {
         } else {
             coordLeft.setVisibility(View.GONE);
         }
-
-        // Show bottom coordinate (letters) on last row
         if (row == 7) {
             coordBottom.setText(String.valueOf((char) ('a' + col))); // a-h
             coordBottom.setVisibility(View.VISIBLE);
@@ -86,18 +82,17 @@ public class ChessSquareAdapter extends BaseAdapter {
         coordLeft.setTextColor(textColor);
         coordBottom.setTextColor(textColor);
 
-        // Get the piece at this position
         String piece = chessBoardState[row][col];
 
         ImageView squareImage = view.findViewById(R.id.square_image);
         View validMoveIndicator = view.findViewById(R.id.validMoveIndicator);
         View checkBackground = view.findViewById(R.id.checkBackground);
 
-        if (!piece.isEmpty()) {
+        if (piece.isEmpty()) {
+            squareImage.setImageDrawable(null);
+        } else {
             int resId = getDrawableResourceForPiece(piece);
             squareImage.setImageResource(resId);
-        } else {
-            squareImage.setImageDrawable(null);
         }
 
         if (validMoves.contains(position)) {

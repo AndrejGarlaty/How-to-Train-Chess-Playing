@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.model;
 
 import java.util.*;
 import java.util.regex.*;

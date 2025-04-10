@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.model;
 
 import android.content.Context;
 import android.util.Log;

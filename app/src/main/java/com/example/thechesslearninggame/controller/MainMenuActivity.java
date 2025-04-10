@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.controller;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.thechesslearninggame.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.slider.Slider;
@@ -30,9 +31,7 @@ public class MainMenuActivity extends BaseActivity {
 
         settingsLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) recreate();
-                }
+                result -> { if (result.getResultCode() == Activity.RESULT_OK) recreate();}
         );
 
         // Local multiplayer (existing game)
@@ -42,9 +41,7 @@ public class MainMenuActivity extends BaseActivity {
         });
 
         // Play against AI (Stockfish)
-        btnStockfish.setOnClickListener(v -> {
-            showDifficultyDialog();
-        });
+        btnStockfish.setOnClickListener(v -> showDifficultyDialog());
 
         btnExit.setOnClickListener(v -> {
             Intent intent = new Intent(MainMenuActivity.this, SettingsActivity.class);
@@ -64,7 +61,7 @@ public class MainMenuActivity extends BaseActivity {
         slider.addOnChangeListener((slider1, value, fromUser) -> {
             String diffValue = getString(R.string.difficulty) + " " + (int) value;
             tvDifficultyValue.setText(diffValue);
-                }
+            }
         );
 
         AlertDialog dialog = new MaterialAlertDialogBuilder(this)
@@ -72,7 +69,6 @@ public class MainMenuActivity extends BaseActivity {
                 .create();
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
-
         btnPlay.setOnClickListener(v -> {
             int difficulty = (int) slider.getValue();
             Intent intent = new Intent(MainMenuActivity.this, StockfishActivity.class);

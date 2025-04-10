@@ -1,10 +1,13 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.controller;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.thechesslearninggame.model.enums.Language;
+import com.example.thechesslearninggame.model.enums.Preferences;
 
 import java.util.Locale;
 

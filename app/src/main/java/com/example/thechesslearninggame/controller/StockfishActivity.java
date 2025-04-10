@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.controller;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
@@ -22,6 +22,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.thechesslearninggame.model.ChessGame;
+import com.example.thechesslearninggame.model.ChessMoveParser;
+import com.example.thechesslearninggame.model.ChessSquareAdapter;
+import com.example.thechesslearninggame.model.enums.Language;
+import com.example.thechesslearninggame.model.enums.Preferences;
+import com.example.thechesslearninggame.R;
+import com.example.thechesslearninggame.model.StockfishManager;
+import com.example.thechesslearninggame.model.enums.VoiceInput;
+import com.example.thechesslearninggame.model.VoiceInputManager;
+import com.example.thechesslearninggame.model.VoiceOutputManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
@@ -56,7 +66,7 @@ public class StockfishActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stockfish);
+        setContentView(R.layout.activity_chess);
 
         setPreferences();
 
@@ -90,7 +100,7 @@ public class StockfishActivity extends BaseActivity {
             voiceInputManager = new VoiceInputManager(this, new VoiceInputManager.VoiceInputCallback() {
                 @Override
                 public void onVoiceInputResult(String text) {
-                    Toast.makeText(StockfishActivity.this, text, Toast.LENGTH_SHORT).show();
+                 //   Toast.makeText(StockfishActivity.this, text, Toast.LENGTH_SHORT).show(); debug only
                     voiceButton.setText(R.string.voice_button);
                     voiceButton.setBackgroundColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
                     String uciMove = ChessMoveParser.parseToUCI(text, chessGame);
@@ -100,7 +110,7 @@ public class StockfishActivity extends BaseActivity {
                         clearSelection();
                     } else {
                         String msg = getMessage();
-                        Toast.makeText(StockfishActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StockfishActivity.this, msg+": "+text, Toast.LENGTH_SHORT).show();
                         voiceOutputManager.speak(msg);
                     }
                 }
@@ -193,7 +203,6 @@ public class StockfishActivity extends BaseActivity {
         isPlayerTurn = false;
         triggerEngineMove();
     }
-
 
     private void setupBoard() {
         List<Integer> colors = new ArrayList<>();

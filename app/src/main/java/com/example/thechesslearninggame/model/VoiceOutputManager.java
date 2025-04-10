@@ -1,4 +1,4 @@
-package com.example.thechesslearninggame;
+package com.example.thechesslearninggame.model;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -9,6 +9,9 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.thechesslearninggame.model.enums.Language;
+import com.example.thechesslearninggame.model.enums.Preferences;
 
 import java.util.Locale;
 
