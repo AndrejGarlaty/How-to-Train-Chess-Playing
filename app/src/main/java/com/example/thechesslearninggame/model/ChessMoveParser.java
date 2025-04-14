@@ -1,7 +1,13 @@
 package com.example.thechesslearninggame.model;
 
-import java.util.*;
-import java.util.regex.*;
+import com.example.thechesslearninggame.model.enums.PieceType;
+import com.example.thechesslearninggame.model.pieces.Piece;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChessMoveParser {
     private static final Map<String, String> pieceAbbreviations;
@@ -101,11 +107,11 @@ public class ChessMoveParser {
 
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                String piece = chessGame.getBoard()[row][col];
-                if (piece.isEmpty()) continue;
-                if (!pieceAbbreviation.isEmpty() && !piece.equalsIgnoreCase(pieceAbbreviation)) continue;
-                if (pieceAbbreviation.isEmpty() && !piece.equalsIgnoreCase("P") &&
-                        !piece.equalsIgnoreCase("p")) continue;
+                Piece piece = chessGame.getBoard().getSquareAt(row, col).getPiece();
+                if (piece==null) continue;
+                //todo ak to nie je to co mame my
+              //  if (!pieceAbbreviation.isEmpty() && !piece.equalsIgnoreCase(pieceAbbreviation)) continue;
+                if (pieceAbbreviation.isEmpty() && !piece.getPieceType().equals(PieceType.PAWN)) continue;
                 int destRow = 8 - Character.getNumericValue(targetSquare.charAt(1));
                 int destCol = targetSquare.charAt(0) - 'a';
 
@@ -141,7 +147,7 @@ public class ChessMoveParser {
         int fromCol = fromSquare.charAt(0) - 'a';
         int fromRow = 8 - Character.getNumericValue(fromSquare.charAt(1));
 
-        String piece = chessGame.getBoard()[fromRow][fromCol];
+        Piece piece = chessGame.getBoard().getSquareAt(fromRow, fromCol).getPiece();
         String spokenPiece = mapPieceToSpokenName(piece, language);
         String preposition = language.equals("sk") ? "na" : "to";
         return spokenPiece + " " + preposition + " " + toSquare;
@@ -157,21 +163,17 @@ public class ChessMoveParser {
         return chess;
     }
 
-    private static String mapPieceToSpokenName(String piece, String language) {
-        if (piece == null || piece.isEmpty()) {
+    private static String mapPieceToSpokenName(Piece piece, String language) {
+        if (piece == null) {
             return "";
         }
-
-        char letter = Character.toUpperCase(piece.charAt(0));
-        return switch (letter) {
-            case 'P' ->
-                    language.equals("sk") ? "pešiak" : "pawn";
-            case 'N' -> language.equals("sk") ? "jazdec" : "knight";
-            case 'B' -> language.equals("sk") ? "strelec" : "bishop";
-            case 'R' -> language.equals("sk") ? "veža" : "rook";
-            case 'Q' -> language.equals("sk") ? "dáma" : "queen";
-            case 'K' -> language.equals("sk") ? "kráľ" : "king";
-            default -> "";
+        return switch (piece.getPieceType()) {
+            case PAWN -> language.equals("sk") ? "pešiak" : "pawn";
+            case KNIGHT -> language.equals("sk") ? "jazdec" : "knight";
+            case BISHOP -> language.equals("sk") ? "strelec" : "bishop";
+            case ROOK -> language.equals("sk") ? "veža" : "rook";
+            case QUEEN -> language.equals("sk") ? "dáma" : "queen";
+            case KING -> language.equals("sk") ? "kráľ" : "king";
         };
     }
 

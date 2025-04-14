@@ -22,15 +22,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.thechesslearninggame.model.Board.Square;
 import com.example.thechesslearninggame.model.ChessGame;
 import com.example.thechesslearninggame.model.ChessMoveParser;
 import com.example.thechesslearninggame.model.enums.Language;
+import com.example.thechesslearninggame.model.enums.PieceColor;
 import com.example.thechesslearninggame.model.enums.Preferences;
 import com.example.thechesslearninggame.R;
 import com.example.thechesslearninggame.model.StockfishManager;
 import com.example.thechesslearninggame.model.enums.VoiceInput;
 import com.example.thechesslearninggame.model.VoiceInputManager;
 import com.example.thechesslearninggame.model.VoiceOutputManager;
+import com.example.thechesslearninggame.model.pieces.Piece;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
@@ -319,9 +322,9 @@ public class StockfishActivity extends BaseActivity {
     }
 
     private boolean isValidSelection(int row, int col) {
-        String piece = chessGame.getBoard()[row][col];
-        if (piece.isEmpty()) return false;
-        return chessGame.isWhiteTurn() == Character.isUpperCase(piece.charAt(0));
+        Piece piece = chessGame.getBoard().getSquareAt(row, col).getPiece();
+        if (piece==null) return false;
+        return chessGame.isWhiteTurn() == piece.getPieceColor().equals(PieceColor.WHITE);
     }
 
     private void showValidMoves(int fromRow, int fromCol) {
@@ -345,12 +348,12 @@ public class StockfishActivity extends BaseActivity {
 
     private void updateGameStatus() {
         if (chessGame.isBlackInCheck()) {
-            int[] blackKingPos = chessGame.getBlackKingPosition();
-            redForCheck.add(blackKingPos[0] * 8 + blackKingPos[1]);
+            Square blackKingPos = chessGame.getBlackKingPosition();
+            redForCheck.add(blackKingPos.getPosition().row() * 8 + blackKingPos.getPosition().col());
             adapter.updateCheckBackgroundHighlighting(redForCheck);
         } else if (chessGame.isWhiteInCheck()) {
-            int[] whiteKingPosition = chessGame.getWhiteKingPosition();
-            redForCheck.add(whiteKingPosition[0] * 8 + whiteKingPosition[1]);
+            Square whiteKingPosition = chessGame.getWhiteKingPosition();
+            redForCheck.add(whiteKingPosition.getPosition().row() * 8 + whiteKingPosition.getPosition().col());
             adapter.updateCheckBackgroundHighlighting(redForCheck);
         } else {
             redForCheck.clear();

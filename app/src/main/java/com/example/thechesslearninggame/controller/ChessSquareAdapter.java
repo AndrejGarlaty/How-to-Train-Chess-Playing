@@ -11,6 +11,9 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.example.thechesslearninggame.R;
+import com.example.thechesslearninggame.model.Board.Board;
+import com.example.thechesslearninggame.model.enums.PieceColor;
+import com.example.thechesslearninggame.model.pieces.Piece;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +21,11 @@ import java.util.List;
 public class ChessSquareAdapter extends BaseAdapter {
     private final List<Integer> colors;
     private final Context context;
-    private String[][] chessBoardState;
+    private Board chessBoardState;
     private List<Integer> validMoves;
     private List<Integer> checkRed = new ArrayList<>();
 
-    public ChessSquareAdapter(Context context, List<Integer> colors, String[][] chessBoardState, List<Integer> validMoves) {
+    public ChessSquareAdapter(Context context, List<Integer> colors, Board chessBoardState, List<Integer> validMoves) {
         this.context = context;
         this.colors = colors;
         this.chessBoardState = chessBoardState;
@@ -82,13 +85,13 @@ public class ChessSquareAdapter extends BaseAdapter {
         coordLeft.setTextColor(textColor);
         coordBottom.setTextColor(textColor);
 
-        String piece = chessBoardState[row][col];
+        Piece piece = chessBoardState.getSquareAt(row, col).getPiece();
 
         ImageView squareImage = view.findViewById(R.id.square_image);
         View validMoveIndicator = view.findViewById(R.id.validMoveIndicator);
         View checkBackground = view.findViewById(R.id.checkBackground);
 
-        if (piece.isEmpty()) {
+        if (piece==null) {
             squareImage.setImageDrawable(null);
         } else {
             int resId = getDrawableResourceForPiece(piece);
@@ -110,25 +113,30 @@ public class ChessSquareAdapter extends BaseAdapter {
         return view;
     }
 
-    private int getDrawableResourceForPiece(String piece) {
-        return switch (piece) {
-            case "P": yield R.drawable.wp;
-            case "p": yield R.drawable.bp;
-            case "R": yield R.drawable.wr;
-            case "r": yield R.drawable.br;
-            case "N": yield R.drawable.wn;
-            case "n": yield R.drawable.bn;
-            case "B": yield R.drawable.wb;
-            case "b": yield R.drawable.bb;
-            case "Q": yield R.drawable.wq;
-            case "q": yield R.drawable.bq;
-            case "K": yield R.drawable.wk;
-            case "k": yield R.drawable.bk;
-            default: yield 0;
-        };
+    private int getDrawableResourceForPiece(Piece piece) {
+        if (piece.getPieceColor().equals(PieceColor.WHITE)) {
+            return switch (piece.getPieceType()) {
+                case PAWN: yield R.drawable.wp;
+                case ROOK: yield R.drawable.wr;
+                case KNIGHT: yield R.drawable.wn;
+                case BISHOP: yield R.drawable.wb;
+                case QUEEN: yield R.drawable.wq;
+                case KING: yield R.drawable.wk;
+            };
+        } else {
+            return switch (piece.getPieceType()) {
+                case PAWN: yield R.drawable.bp;
+                case ROOK: yield R.drawable.br;
+                case KNIGHT: yield R.drawable.bn;
+                case BISHOP: yield R.drawable.bb;
+                case QUEEN: yield R.drawable.bq;
+                case KING: yield R.drawable.bk;
+            };
+        }
+
     }
 
-    public void updateChessBoardState(String[][] newChessBoardState) {
+    public void updateChessBoardState(Board newChessBoardState) {
         this.chessBoardState = newChessBoardState;
     }
 
